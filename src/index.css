@@ -3,6 +3,21 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+@font-face {
+  font-family: "Libre Franklin", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 100 900;
+  font-style: normal;
+  src: url('/fonts/Libre_Franklin/LibreFranklin-VariableFont_wght.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: "Libre Franklin", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 100 900;
+  font-style: italic;
+  src: url('/fonts/Libre_Franklin/LibreFranklin-Italic-VariableFont_wght.ttf') format('truetype');
+}
 
 @theme {
   --color-muted: #e5e5e5;
@@ -37,6 +52,8 @@
   --color-gray-800: #262626;
   --color-gray-900: #171717;
   --color-gray-950: #0a0a0a;
+
+  --font-sans: "Libre Franklin", ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
 }
 
 .dark {
@@ -56,6 +73,10 @@
   /* Off-white for readable text */
   --color-background: #121212;
   /* Neutral dark background */
+}
+
+body {
+  font-family: var(--font-sans);
 }
 
 .prose {
