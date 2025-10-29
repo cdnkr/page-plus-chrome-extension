@@ -11,6 +11,7 @@ export const AVAILABLE_TOOLS: Tool[] = [
   { name: 'Analyze Image Colors', description: 'analyze the colors in the image', function: 'analyzeImageColors' },
   { name: 'Summarize', description: 'summarize the context', function: 'summarize' },
   { name: 'Summarizer (Gemini Nano)', description: 'on-device summarizer (streaming)', function: 'summarizerNano' },
+  { name: 'Writer (Gemini Nano)', description: 'on-device content writing', function: 'writerNano' },
   { name: 'Get Page Images', description: 'extract all images from the current page', function: 'getPageImages' },
 ];
 
@@ -403,6 +404,49 @@ export const createToolRegistry = (aiProvider: AiProvider, t: (path: string, opt
     }
   };
 
+  const writerNanoTool: ToolFunction = async (query, contextItems, onChunk) => {
+    console.log('Writer (Gemini Nano) Tool: Starting execution');
+    try {
+      // Gating: require Prompt API (Nano mode) available and Writer available
+      const nanoAvailable = ('LanguageModel' in window);
+      const writerApi = (window as any).Writer;
+      const writerAvailable = !!writerApi && typeof writerApi.availability === 'function' && (await writerApi.availability()) === 'available';
+
+      if (!nanoAvailable || !writerAvailable) {
+        onChunk('Writer is not available on this device/browser. Ensure Google Nano mode and Writer are enabled.\n');
+        return;
+      }
+
+      // Use query as the writing prompt
+      const prompt = query.trim();
+      if (!prompt) {
+        onChunk('No writing prompt provided. Please provide a prompt for what to write.\n');
+        return;
+      }
+
+      // Collect text from context items as background context
+      const contextText = contextItems
+        .filter((it: any) => it.isActive !== false)
+        .map((it: any) => it.content || '')
+        .join('\n\n')
+        .trim();
+
+      const writer = await writerApi.create({
+        tone: 'neutral',
+        format: 'markdown',
+        length: 'medium',
+      });
+
+      const stream = writer.writeStreaming(prompt, contextText ? { context: contextText } : undefined);
+      for await (const chunk of stream) {
+        onChunk(String(chunk));
+      }
+    } catch (error) {
+      console.error('Writer (Gemini Nano) Tool: Error:', error);
+      onChunk(`\n❌ Error: ${error instanceof Error ? error.message : 'Unknown error'}\n`);
+    }
+  };
+
   const getPageImagesTool: ToolFunction = async (_query, _contextItems, onChunk, _currentConversation) => {
     console.log('GetPageImages Tool: Starting execution');
     
@@ -526,6 +570,7 @@ export const createToolRegistry = (aiProvider: AiProvider, t: (path: string, opt
     analyzeImageColors: analyzeImageColorsTool,
     summarize: summarizeTool,
     summarizerNano: summarizerNanoTool,
+    writerNano: writerNanoTool,
     getPageImages: getPageImagesTool,
   };
 };

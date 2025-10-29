@@ -16,6 +16,9 @@ interface Props {
   summarizerAvailability?: { status: string; isReady: boolean } | null
   summarizerDownloadProgress?: number
   onStartSummarizerDownload?: () => void
+  writerAvailability?: { status: string; isReady: boolean } | null
+  writerDownloadProgress?: number
+  onStartWriterDownload?: () => void
 }
 
 function Header({
@@ -29,7 +32,10 @@ function Header({
   onRefreshPromptAvailability,
   summarizerAvailability,
   summarizerDownloadProgress,
-  onStartSummarizerDownload
+  onStartSummarizerDownload,
+  writerAvailability,
+  writerDownloadProgress,
+  onStartWriterDownload
 }: Props) {
 
   return (
@@ -62,6 +68,9 @@ function Header({
           summarizerAvailability={summarizerAvailability}
           summarizerDownloadProgress={summarizerDownloadProgress}
           onStartSummarizerDownload={onStartSummarizerDownload}
+          writerAvailability={writerAvailability}
+          writerDownloadProgress={writerDownloadProgress}
+          onStartWriterDownload={onStartWriterDownload}
         />
       </div>
     </div>

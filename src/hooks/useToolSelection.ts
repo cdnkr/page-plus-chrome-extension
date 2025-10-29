@@ -1,9 +1,19 @@
 import { useCallback } from 'react';
-import { AiProvider } from '../types/aiProvider';
+import { AiProvider, AiModel } from '../types/aiProvider';
 import { IContextItem, IConversationMessage } from '../types/conversation';
 import { AVAILABLE_TOOLS } from '../utils/toolRegistry';
+import { SUPPORTED_MODELS } from '../constants';
 
-export const useToolSelection = (aiProvider: AiProvider) => {
+interface WriterAvailability {
+  status: 'unavailable' | 'downloadable' | 'downloading' | 'available';
+  isReady: boolean;
+}
+
+export const useToolSelection = (
+  aiProvider: AiProvider,
+  writerAvailability?: WriterAvailability | null,
+  selectedModel?: AiModel
+) => {
   const selectTool = useCallback(async (
     query: string, 
     contextItems: IContextItem[], 
@@ -18,10 +28,18 @@ export const useToolSelection = (aiProvider: AiProvider) => {
       })
     );
 
+    // Check if Writer should be available
+    const isWriterAvailable = writerAvailability?.status === 'available' && writerAvailability?.isReady;
+    const isNanoSelected = selectedModel === SUPPORTED_MODELS.GOOGLE_NANO;
+    const shouldShowWriter = isWriterAvailable && isNanoSelected;
+
     // Filter available tools based on context
     const availableTools = AVAILABLE_TOOLS.filter(tool => {
       if (tool.function === 'fillForm' && !hasInputElements) {
         return false; // Hide fill form tool if no input elements in context
+      }
+      if (tool.function === 'writerNano' && !shouldShowWriter) {
+        return false; // Hide Writer tool if not available or Nano not selected
       }
       return true;
     });
@@ -120,7 +138,7 @@ IMPORTANT: You must respond with ONLY the tool function name, not the full JSON 
             });
         });
     });
-  }, [aiProvider]);
+  }, [aiProvider, writerAvailability, selectedModel]);
 
   return { selectTool };
 };

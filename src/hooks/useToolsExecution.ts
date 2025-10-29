@@ -2,11 +2,20 @@ import { useCallback } from 'react';
 import { IContextItem, IConversationMessage } from '../types/conversation';
 import { createToolRegistry } from '../utils/toolRegistry';
 import { useToolSelection } from './useToolSelection';
-import { AiProvider } from '../types/aiProvider';
+import { AiProvider, AiModel } from '../types/aiProvider';
 import { useI18n } from './useI18n';
 
-export const useToolsExecution = (aiProvider: AiProvider) => {
-  const { selectTool } = useToolSelection(aiProvider);
+interface WriterAvailability {
+  status: 'unavailable' | 'downloadable' | 'downloading' | 'available';
+  isReady: boolean;
+}
+
+export const useToolsExecution = (
+  aiProvider: AiProvider,
+  writerAvailability?: WriterAvailability | null,
+  selectedModel?: AiModel
+) => {
+  const { selectTool } = useToolSelection(aiProvider, writerAvailability, selectedModel);
   const { t } = useI18n();
 
   const executeWithTools = useCallback(async (
@@ -48,7 +57,7 @@ export const useToolsExecution = (aiProvider: AiProvider) => {
       await toolRegistry.query(query, contextItems, onChunk, currentConversation);
       return 'query';
     }
-  }, [selectTool, aiProvider]);
+  }, [selectTool, aiProvider, writerAvailability, selectedModel]);
 
   return { executeWithTools };
 };

@@ -417,7 +417,7 @@ export const usePromptApi = (): UsePromptApiReturn => {
         "properties": {
           "toolName": {
             "type": "string",
-            "enum": ["query", "fillForm", "getCodeFromElementOnPage", "analyzeImageColors", "summarize", "getPageImages"]
+            "enum": ["query", "fillForm", "getCodeFromElementOnPage", "analyzeImageColors", "summarize", "summarizerNano", "writerNano", "getPageImages"]
           }
         },
         "required": ["toolName"],

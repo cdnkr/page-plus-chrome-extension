@@ -24,6 +24,15 @@ export const i18n = {
                     openFlagsButton: "Open Flags",
                     separateAvailability: "Summarizer has separate availability and download from Prompt API."
                 }
+            },
+            writerApi: {
+                title: "Writer API",
+                description: "On-device content writing API. Works independently from Prompt API.",
+                unavailable: {
+                    message: "Writer API unavailable. Ensure Chrome flags and device requirements are met.",
+                    openFlagsButton: "Open Flags",
+                    separateAvailability: "Writer has separate availability and download from Prompt API."
+                }
             }
         },
         inputSection: {
@@ -128,6 +137,15 @@ export const i18n = {
                     openFlagsButton: "Abrir Banderas",
                     separateAvailability: "La API de Resumen tiene disponibilidad y descarga separadas de la API de Prompt."
                 }
+            },
+            writerApi: {
+                title: "API de Escritor",
+                description: "API de escritura de contenido en el dispositivo. Funciona independientemente de la API de Prompt.",
+                unavailable: {
+                    message: "API de Escritor no disponible. Asegúrate de que las banderas de Chrome y los requisitos del dispositivo se cumplan.",
+                    openFlagsButton: "Abrir Banderas",
+                    separateAvailability: "La API de Escritor tiene disponibilidad y descarga separadas de la API de Prompt."
+                }
             }
         },
         inputSection: {
@@ -231,6 +249,15 @@ export const i18n = {
                     message: "要約APIが利用できません。Chromeフラグとデバイスの要件が満たされていることを確認してください。",
                     openFlagsButton: "フラグを開く",
                     separateAvailability: "要約APIは、Prompt APIとは別の可用性とダウンロードを持っています。"
+                }
+            },
+            writerApi: {
+                title: "ライターAPI",
+                description: "オンデバイスコンテンツライティングAPI。Prompt APIとは独立して動作します。",
+                unavailable: {
+                    message: "ライターAPIが利用できません。Chromeフラグとデバイスの要件が満たされていることを確認してください。",
+                    openFlagsButton: "フラグを開く",
+                    separateAvailability: "ライターAPIは、Prompt APIとは別の可用性とダウンロードを持っています。"
                 }
             }
         },

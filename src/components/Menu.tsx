@@ -15,6 +15,9 @@ interface Props {
     summarizerAvailability?: { status: string; isReady: boolean } | null
     summarizerDownloadProgress?: number
     onStartSummarizerDownload?: () => void
+    writerAvailability?: { status: string; isReady: boolean } | null
+    writerDownloadProgress?: number
+    onStartWriterDownload?: () => void
 }
 
 export default function Menu({
@@ -24,7 +27,10 @@ export default function Menu({
     onRefreshPromptAvailability,
     summarizerAvailability,
     summarizerDownloadProgress,
-    onStartSummarizerDownload
+    onStartSummarizerDownload,
+    writerAvailability,
+    writerDownloadProgress,
+    onStartWriterDownload
 }: Props) {
     const [autoSummarizeEnabled, setAutoSummarizeEnabled] = useState(false)
     const { t } = useI18n()
@@ -83,6 +89,9 @@ export default function Menu({
                         summarizerAvailability={summarizerAvailability}
                         summarizerDownloadProgress={summarizerDownloadProgress || 0}
                         onStartSummarizerDownload={onStartSummarizerDownload}
+                        writerAvailability={writerAvailability}
+                        writerDownloadProgress={writerDownloadProgress || 0}
+                        onStartWriterDownload={onStartWriterDownload}
                     />
                 </>
             }

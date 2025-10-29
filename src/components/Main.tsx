@@ -18,6 +18,7 @@ import { InputSection } from "../components/input-section/InputSection"
 import Conversation from "../components/conversation/Conversation"
 import { useLanguage } from "../contexts/LanguageContext"
 import { useSummarizerApi } from "../hooks/useSummarizerApi"
+import { useWriterApi } from "../hooks/useWriterApi"
 
 export default function Main() {
     const [prevConversations, setPrevConversations] = useState<IConversationStorageItem[]>([]);
@@ -48,6 +49,7 @@ export default function Main() {
     const { language } = useLanguage();
     const aiProvider = useAiProvider(selectedModel, currentConversation)
     const summarizerApi = useSummarizerApi()
+    const writerApi = useWriterApi()
     const {
         availability,
         session,
@@ -62,7 +64,7 @@ export default function Main() {
     // for testing
     // const availability: { status: 'unavailable' | 'downloadable' | 'downloading' | 'available'; isReady: boolean } = { status: 'unavailable', isReady: false }
 
-    const { executeWithTools } = useToolsExecution(aiProvider)
+    const { executeWithTools } = useToolsExecution(aiProvider, writerApi.availability, selectedModel)
 
     // Conversation management functions
     async function updateCurrentConversation(userMessage: IConversationMessage, aiResponse: IConversationMessage) {
@@ -739,6 +741,15 @@ export default function Main() {
         }
     }, [summarizerApi])
 
+    // Writer API handlers
+    const handleStartWriterDownload = useCallback(async () => {
+        try {
+            await writerApi.initializeWriter()
+        } catch (error) {
+            console.error('Failed to start Writer download:', error)
+        }
+    }, [writerApi])
+
     // Summarizer availability refresh is not exposed in UI; omitted
 
     return (
@@ -755,6 +766,9 @@ export default function Main() {
                 summarizerAvailability={availability.status === 'available' ? summarizerApi.availability : null}
                 summarizerDownloadProgress={summarizerApi.downloadProgress}
                 onStartSummarizerDownload={handleStartSummarizerDownload}
+                writerAvailability={availability.status === 'available' ? writerApi.availability : null}
+                writerDownloadProgress={writerApi.downloadProgress}
+                onStartWriterDownload={handleStartWriterDownload}
             />
 
             <div
