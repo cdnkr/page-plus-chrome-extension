@@ -444,6 +444,7 @@ function handleAreaSelectionStart(event: MouseEvent) {
     height: 0;
   `;
   document.body.appendChild(currentSelectionBox);
+  createFullPageOverlay();
 }
 
 function handleAreaSelectionMove(event: MouseEvent) {
@@ -486,6 +487,7 @@ async function handleAreaSelectionEnd(_event: MouseEvent) {
       },
       elements: elements
     });
+    removeFullPageOverlay();
   }
 
   // Clean up
@@ -496,6 +498,27 @@ async function handleAreaSelectionEnd(_event: MouseEvent) {
 
   // Deactivate area selection mode
   deactivateAreaSelectionMode();
+}
+
+function createFullPageOverlay() {
+  const fullPageOverlay = document.createElement('div');
+  fullPageOverlay.className = 'page-plus__full-page-overlay';
+  fullPageOverlay.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0);
+  `;
+  document.body.appendChild(fullPageOverlay);
+}
+
+function removeFullPageOverlay() {
+  const fullPageOverlay = document.querySelector('.page-plus__full-page-overlay');
+  if (fullPageOverlay) {
+    fullPageOverlay.remove();
+  }
 }
 
 async function cropScreenshot(screenshotData: string, bounds: any, url: string, elements?: any[]) {
