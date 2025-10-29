@@ -131,7 +131,7 @@ export const InputSection = forwardRef<HTMLDivElement, InputSectionProps>(({
                 'mt-auto w-full p-4 rounded-t-[25px] bg-white/60 backdrop-blur-lg',
                 // "relative before:content-[''] before:absolute before:inset-x-0 before:-top-[40px] before:h-[40px] before:bg-gradient-to-t before:from-background before:to-transparent"
             )}>
-            <div className='relative rounded-[25px] bg-black/10'>
+            <div className='rounded-[25px] bg-black/10'>
                 {contextItems.length > 0 && (
                     <div className={
                         cn(
