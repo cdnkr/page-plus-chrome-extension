@@ -13,9 +13,10 @@ interface ContextItemProps {
     item: IContextItem,
     onRemoveContextItem: (itemId: string) => void
     showRemoveButton?: boolean
+    isProcessing?: boolean
 }
 
-export default function ContextItem({ item, onRemoveContextItem, showRemoveButton = true }: ContextItemProps) {
+export default function ContextItem({ item, onRemoveContextItem, showRemoveButton = true, isProcessing = false }: ContextItemProps) {
     return (
         <div className={cn(
             'group',
@@ -24,6 +25,14 @@ export default function ContextItem({ item, onRemoveContextItem, showRemoveButto
             ((item.type === 'image') || (item.type === 'page')) ? 'p-0' : '',
             // "relative after:content-[''] after:absolute after:inset-x-0 after:bottom-0 after:h-[100%] after:bg-gradient-to-t after:from-black/20 after:to-transparent after:z-0 after:rounded-b-[20px]"
         )}>
+            {isProcessing && (
+                <div className="absolute inset-0 bg-black/10 rounded-[20px] flex items-center justify-center z-10">
+                    <svg className="animate-spin" width="20" height="20" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10" stroke="black" strokeWidth="3" fill="none" opacity=".15" />
+                        <path d="M12 2 a10 10 0 0 1 10 10" stroke="black" strokeWidth="3" fill="none" />
+                    </svg>
+                </div>
+            )}
             {showRemoveButton && (
                 <div className="absolute top-2 right-2 z-10">
                     <button onClick={() => onRemoveContextItem(item.id)} className='size-4 rounded-full cursor-pointer bg-content/50 text-surface flex items-center justify-center'>

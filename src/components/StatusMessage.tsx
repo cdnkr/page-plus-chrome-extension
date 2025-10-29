@@ -1,6 +1,7 @@
 import { IStatusMessage } from "../types/status";
 import { cn } from "../utils/tailwind";
 import Button from "./ui/Button";
+import { useState } from "react";
 
 export default function StatusMessage({
     title,
@@ -9,6 +10,17 @@ export default function StatusMessage({
     action,
     setStatus
 }: IStatusMessage & { setStatus: (val: IStatusMessage | null) => void }) {
+    const [isActionLoading, setIsActionLoading] = useState(false)
+
+    async function handleActionClick() {
+        if (!action || isActionLoading) return
+        try {
+            setIsActionLoading(true)
+            await Promise.resolve(action.onClick())
+        } finally {
+            setIsActionLoading(false)
+        }
+    }
 
     return (
         <div className='absolute bottom-full w-full p-2 mb-2'>
@@ -28,20 +40,14 @@ export default function StatusMessage({
                     <div className="mt-3">
                         <Button
                             color="ghost"
-                            onClick={action.onClick}
+                            onClick={handleActionClick}
+                            loading={isActionLoading}
                             className={cn(
-                                'text-white',
+                                'text-black',
                                 'rounded-[12px]',
-                                type === 'error'
-                                    ? 'bg-red-500'
-                                    : type === 'info'
-                                        ? 'bg-blue-500'
-                                        : type === 'warning'
-                                            ? 'bg-amber-border-amber-500'
-                                            : 'bg-green-500'
                             )}
                         >
-                            {action.label}
+                            {isActionLoading ? '' : action.label}
                         </Button>
                     </div>
                 )}

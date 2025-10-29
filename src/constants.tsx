@@ -13,3 +13,4 @@ export const DEFAULT_SUMMARY_MODEL: AiModel = SUPPORTED_MODELS.GEMINI_2_5_FLASH_
 export const TEXTAREA_PER_ROW = 45
 export const CONVERSATION_COMPONENT_PREFIX = '__PAGEPLUS__'
 export const API_URL = 'https://api-holy-frog-5486.fly.dev'
+export const AUTO_SUMMARIZE_THRESHOLD = 2000

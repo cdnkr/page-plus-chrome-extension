@@ -29,6 +29,7 @@ interface InputSectionProps {
         status: 'unavailable' | 'downloadable' | 'downloading' | 'available'
         isReady: boolean
     }
+    processingContextId?: string | null
 }
 
 export const InputSection = forwardRef<HTMLDivElement, InputSectionProps>(({
@@ -45,6 +46,7 @@ export const InputSection = forwardRef<HTMLDivElement, InputSectionProps>(({
     removeContextItem,
     contextPerc,
     availability,
+    processingContextId,
 }, ref) => {
     const { t } = useI18n()
 
@@ -141,6 +143,7 @@ export const InputSection = forwardRef<HTMLDivElement, InputSectionProps>(({
                                 <ContextItem
                                     item={item}
                                     onRemoveContextItem={removeContextItem}
+                                    isProcessing={processingContextId === item.id}
                                 />
                             ))}
                         </div>

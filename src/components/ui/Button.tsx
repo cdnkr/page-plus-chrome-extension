@@ -5,7 +5,8 @@ interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     color?: 'primary' | 'black' | 'ghost',
     size?: 'regular' | 'small',
     shape?: 'rect' | 'circle',
-    className?: string
+    className?: string,
+    loading?: boolean
 }
 
 export default function Button({
@@ -14,6 +15,7 @@ export default function Button({
     size = 'regular',
     shape = 'rect',
     className,
+    loading = false,
     ...rest
 }: Props) {
     const colors = {
@@ -39,11 +41,21 @@ export default function Button({
                 colors[color],
                 sizes[size],
                 shapes[shape],
-                className || ''
+                className || '',
+                loading ? 'pointer-events-none opacity-90' : ''
             )}
+            aria-busy={loading ? true : undefined}
+            disabled={rest.disabled || loading}
             {...rest}
         >
-            {children}
+            {loading ? (
+                <svg className="animate-spin" width="16" height="16" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10" stroke="black" strokeWidth="3" fill="none" opacity=".15" />
+                    <path d="M12 2 a10 10 0 0 1 10 10" stroke="black" strokeWidth="3" fill="none" />
+                </svg>
+            ) : (
+                children
+            )}
         </button>
     )
 }

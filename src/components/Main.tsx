@@ -13,7 +13,7 @@ import StatusMessage from "../components/StatusMessage"
 import PageSuggestions from "../components/PageSuggestions"
 import { PageSuggestion } from "../types/suggestions"
 import { generatePageSuggestions } from "../utils/pageSuggestions"
-import { SHOW_SUGGESTIONS, SUPPORTED_MODELS } from "../constants"
+import { AUTO_SUMMARIZE_THRESHOLD, SHOW_SUGGESTIONS, SUPPORTED_MODELS } from "../constants"
 import { InputSection } from "../components/input-section/InputSection"
 import Conversation from "../components/conversation/Conversation"
 import { useLanguage } from "../contexts/LanguageContext"
@@ -37,6 +37,9 @@ export default function Main() {
     const [currentPageUrl, setCurrentPageUrl] = useState('')
     const [isLoadingContextItems, setIsLoadingContextItems] = useState(false)
     const [previousLanguage, setPreviousLanguage] = useState<'en' | 'es' | 'ja'>('en')
+    const [processingContextId, setProcessingContextId] = useState<string | null>(null)
+    const [autoSummarizeEnabled, setAutoSummarizeEnabled] = useState(false)
+    const [autoSummarizeThreshold, setAutoSummarizeThreshold] = useState(AUTO_SUMMARIZE_THRESHOLD)
     
     const inputSectionRef = useRef<HTMLDivElement | null>(null)
     const contextItemsRef = useRef<IContextItem[]>([])
@@ -261,6 +264,27 @@ export default function Main() {
         initPreviousConversations()
     }, [])
 
+    // Load auto-summarize setting and watch for changes
+    useEffect(() => {
+        chrome?.storage?.local?.get(['autoSummarizeOverCharsEnabled', 'autoSummarizeThreshold'], (result) => {
+            setAutoSummarizeEnabled(!!result.autoSummarizeOverCharsEnabled)
+            if (typeof result.autoSummarizeThreshold === 'number') setAutoSummarizeThreshold(result.autoSummarizeThreshold)
+        })
+
+        function onStorageChanged(changes: { [key: string]: chrome.storage.StorageChange }, areaName: string) {
+            if (areaName !== 'local') return
+            if (changes.autoSummarizeOverCharsEnabled) {
+                setAutoSummarizeEnabled(!!changes.autoSummarizeOverCharsEnabled.newValue)
+            }
+            if (changes.autoSummarizeThreshold && typeof changes.autoSummarizeThreshold.newValue === 'number') {
+                setAutoSummarizeThreshold(changes.autoSummarizeThreshold.newValue)
+            }
+        }
+
+        chrome?.storage?.onChanged.addListener(onStorageChanged)
+        return () => chrome?.storage?.onChanged.removeListener(onStorageChanged)
+    }, [])
+
     // Separate effect for quota calculation after session is ready
     useEffect(() => {
         let isCancelled = false;
@@ -283,7 +307,11 @@ export default function Main() {
                         setStatus({
                             type: 'error',
                             title: 'Your context is too large',
-                            description: 'You\'ll have to remove some context items before submitting'
+                            description: 'You\'ll have to remove some context items before submitting',
+                            action: {
+                                label: 'Summarize contexts',
+                                onClick: summarizeActiveContexts
+                            }
                         })
                     } else if (status?.title === 'Your context is too large') {
                         setStatus(null)
@@ -307,6 +335,34 @@ export default function Main() {
         };
     }, [hasInitialized, session.isActive, session.session, contextItems, query, currentConversation, calculateQuotaUsage])
 
+    // Summarize all active text/page contexts sequentially using on-device Summarizer
+    const summarizeActiveContexts = useCallback(async () => {
+        try {
+            // Always initialize the summarizer; summarize() requires an instance
+            await summarizerApi.initializeSummarizer()
+
+            const activeTargets = contextItems
+                .filter(item => item.isActive && (item.type === 'text' || item.type === 'page'))
+
+            for (const item of activeTargets) {
+                setProcessingContextId(item.id)
+                try {
+                    const summarized = await summarizerApi.summarize(item.content)
+                    const updated = contextItemsRef.current.map(ci => ci.id === item.id ? { ...ci, content: summarized } : ci)
+                    setContextItems(updated)
+                    await updateCurrentConversationContext(updated)
+                } catch (e) {
+                    console.error('Failed to summarize context item', item.id, e)
+                    // continue to next item
+                }
+            }
+        } catch (e) {
+            console.error('Summarize contexts failed', e)
+        } finally {
+            setProcessingContextId(null)
+        }
+    }, [contextItems, summarizerApi])
+
     // Add message listener for text selection and page changes
     useEffect(() => {
         const handleMessage = (message: any) => {
@@ -321,6 +377,24 @@ export default function Main() {
                 const updatedContextItems = [...contextItems, newContextItem];
                 setContextItems(updatedContextItems);
                 updateCurrentConversationContext(updatedContextItems);
+
+                // Auto-summarize this item if enabled and over threshold
+                if (autoSummarizeEnabled && (newContextItem.content?.length || 0) > autoSummarizeThreshold) {
+                    (async () => {
+                        try {
+                            setProcessingContextId(newContextItem.id)
+                            await summarizerApi.initializeSummarizer()
+                            const summarized = await summarizerApi.summarize(newContextItem.content)
+                            const updated = updatedContextItems.map(ci => ci.id === newContextItem.id ? { ...ci, content: summarized } : ci)
+                            setContextItems(updated)
+                            await updateCurrentConversationContext(updated)
+                        } catch (e) {
+                            console.error('Auto-summarize failed for textSelected', e)
+                        } finally {
+                            setProcessingContextId(null)
+                        }
+                    })()
+                }
             } else if (message.action === 'areaSelected') {
                 const newContextItem: IContextItem = {
                     id: Date.now().toString(),
@@ -348,6 +422,24 @@ export default function Main() {
                 setContextItems(updatedContextItems);
                 updateCurrentConversationContext(updatedContextItems);
                 setIsLoadingContextItems(false);
+
+                // Auto-summarize this item if enabled and over threshold
+                if (autoSummarizeEnabled && (newContextItem.content?.length || 0) > autoSummarizeThreshold) {
+                    (async () => {
+                        try {
+                            setProcessingContextId(newContextItem.id)
+                            await summarizerApi.initializeSummarizer()
+                            const summarized = await summarizerApi.summarize(newContextItem.content)
+                            const updated = updatedContextItems.map(ci => ci.id === newContextItem.id ? { ...ci, content: summarized } : ci)
+                            setContextItems(updated)
+                            await updateCurrentConversationContext(updated)
+                        } catch (e) {
+                            console.error('Auto-summarize failed for pageCaptured', e)
+                        } finally {
+                            setProcessingContextId(null)
+                        }
+                    })()
+                }
             } else if (message.action === 'pageChanged') {
                 // Handle page change - generate suggestions for new pages
                 if (message.url && message.screenshot) {
@@ -715,6 +807,7 @@ export default function Main() {
                     removeContextItem={removeContextItem}
                     contextPerc={contextPerc}
                     availability={availability}
+                    processingContextId={processingContextId}
                 />
             </div>
         </main>

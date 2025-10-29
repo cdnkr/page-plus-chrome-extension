@@ -1,7 +1,11 @@
 import Button from "../components/ui/Button";
+import { AUTO_SUMMARIZE_THRESHOLD } from "../constants";
+import { useI18n } from "../hooks/useI18n";
+import { cn } from "../utils/tailwind";
 import ApiStatus from "./ApiStatus";
 import { LanguageSelector } from "./LanguageSelector";
 import Popover from "./ui/Popover";
+import { useEffect, useState } from "react";
 
 interface Props {
     promptAvailability?: { status: string; isReady: boolean } | null
@@ -22,6 +26,20 @@ export default function Menu({
     summarizerDownloadProgress,
     onStartSummarizerDownload
 }: Props) {
+    const [autoSummarizeEnabled, setAutoSummarizeEnabled] = useState(false)
+    const { t } = useI18n()
+
+    useEffect(() => {
+        chrome?.storage?.local?.get(['autoSummarizeOverCharsEnabled'], (result) => {
+            setAutoSummarizeEnabled(!!result.autoSummarizeOverCharsEnabled)
+        })
+    }, [])
+
+    async function toggleAutoSummarize() {
+        const next = !autoSummarizeEnabled
+        setAutoSummarizeEnabled(next)
+        await chrome?.storage?.local?.set({ autoSummarizeOverCharsEnabled: next, autoSummarizeThreshold: {AUTO_SUMMARIZE_THRESHOLD} })
+    }
     return (
         <Popover
             className="min-w-[320px]"
@@ -30,6 +48,33 @@ export default function Menu({
                 <>
                     {/* Language Selector */}
                     <LanguageSelector />
+                    <div className="p-3 space-y-4">
+                        <div className="flex flex-col gap-1">
+                            <h3 className="text-base">{t('options.title')}</h3>
+                        </div>
+                        <div className="mt-3 rounded-[12px] flex items-start justify-between">
+                            <div className="flex flex-col gap-1">
+                                <span className="text-sm">{t('options.summarizeByDefault.label')}</span>
+                                <span className="text-xs text-gray-600 max-w-[90%]">{t('options.summarizeByDefault.description').replace('{threshold}', AUTO_SUMMARIZE_THRESHOLD.toString())}</span>
+                            </div>
+                            <label className="inline-flex items-center cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    className="sr-only peer"
+                                    checked={autoSummarizeEnabled}
+                                    onChange={toggleAutoSummarize}
+                                />
+                                <div className="relative w-9 h-5 bg-black/20 rounded-full peer-focus:outline-none peer-checked:bg-black transition-colors">
+                                    <div
+                                        className={cn(
+                                            "absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform duration-200",
+                                            autoSummarizeEnabled ? 'translate-x-[16px]' : 'translate-x-0'
+                                        )}
+                                    />
+                                </div>
+                            </label>
+                        </div>
+                    </div>
                     <ApiStatus
                         availability={promptAvailability || { status: 'unavailable', isReady: false }}
                         downloadProgress={promptDownloadProgress}

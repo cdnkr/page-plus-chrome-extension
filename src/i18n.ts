@@ -84,6 +84,14 @@ export const i18n = {
             formFieldsFilledSuccessfully: "The form fields have been filled successfully.",
             errorFillingForm: "Error filling form:",
             error: "Error:"
+        },
+        options: {
+            title: "Options",
+            description: "Options for the extension.",
+            summarizeByDefault: {
+                label: "Summarize by default",
+                description: "Determines if page and text added to chat as context should be summarized if they are over {threshold} characters long.",
+            }
         }
     },
     es: {
@@ -171,6 +179,14 @@ export const i18n = {
             formFieldsFilledSuccessfully: "Los campos del formulario han sido llenados exitosamente.",
             errorFillingForm: "Error llenando formulario:",
             error: "Error:"
+        },
+        options: {
+            title: "Opciones",
+            description: "Opciones para la extensión.",
+            summarizeByDefault: {
+                label: "Resumir por defecto",
+                description: "Determina si la página y el texto agregados al chat como contexto deben ser resumidos si tienen más de {threshold} caracteres.",
+            }
         }
     },
     ja: {
@@ -258,6 +274,14 @@ export const i18n = {
             formFieldsFilledSuccessfully: "フォームフィールドが正常に埋められました。",
             errorFillingForm: "フォーム入力エラー:",
             error: "エラー:"
+        },
+        options: {
+            title: "オプション",
+            description: "オプションは、拡張機能のオプションです。",
+            summarizeByDefault: {
+                label: "デフォルトで要約",
+                description: "チャットにコンテキストとして追加されたページとテキストが {threshold} 文字を超える場合、要約するかどうかを決定します。",
+            }
         }
     },
 }
