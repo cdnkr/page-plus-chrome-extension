@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react"
 import Button from "./ui/Button"
 import { useI18n } from "../hooks/useI18n"
 
@@ -20,9 +21,45 @@ export default function ApiStatus({
     onStartSummarizerDownload
 }: ApiStatusProps) {
     const { t } = useI18n()
-    const status = availability?.status
+    const [verifiedStatus, setVerifiedStatus] = useState<{
+        status: 'unavailable' | 'downloadable' | 'downloading' | 'available' | null;
+        isReady: boolean;
+    }>({ status: null, isReady: false })
 
-    const isUnavailable = status === 'unavailable' || !('LanguageModel' in window)
+    // Secondary verification check - directly queries LanguageModel.availability()
+    useEffect(() => {
+        const checkAvailability = async () => {
+            try {
+                if (!('LanguageModel' in window)) {
+                    setVerifiedStatus({ status: 'unavailable', isReady: false });
+                    return;
+                }
+
+                const available = await (window as any).LanguageModel.availability();
+                const isReady = available === 'available';
+                
+                setVerifiedStatus({ status: available, isReady });
+            } catch (err) {
+                console.error('Error checking Prompt API availability in ApiStatus:', err);
+                setVerifiedStatus({ status: 'unavailable', isReady: false });
+            }
+        };
+
+        checkAvailability();
+    }, [availability?.status]);
+
+    // Use verified status when it indicates 'available' but prop says 'unavailable' (fixes false negatives)
+    // Otherwise prefer prop status for dynamic states like 'downloading' or 'downloadable'
+    // Fall back to verified status if prop is not available
+    const effectiveStatus = verifiedStatus.status === 'available' && 
+                             availability?.status === 'unavailable'
+        ? verifiedStatus.status
+        : (availability?.status || verifiedStatus.status || 'unavailable');
+
+    const status = effectiveStatus
+
+    // Remove redundant window check - we already verified via the useEffect
+    const isUnavailable = status === 'unavailable'
     const isDownloadable = status === 'downloadable'
     const isDownloading = status === 'downloading'
     const isAvailable = status === 'available'
