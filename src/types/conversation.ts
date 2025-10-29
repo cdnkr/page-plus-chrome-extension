@@ -27,6 +27,7 @@ export interface IConversationMessage {
     timestamp: number
     status: 'complete' | 'streaming' | 'processing'
     contextIds: string[]
+    toolUsed?: string
 }
 
 export interface IConversationStorageItem {

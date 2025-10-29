@@ -14,7 +14,7 @@ export const useToolsExecution = (aiProvider: AiProvider) => {
     contextItems: IContextItem[],
     onChunk: (chunk: string) => void,
     currentConversation?: IConversationMessage[]
-  ): Promise<void> => {
+  ): Promise<string> => {
     try {
       // Step 1: Select the appropriate tool
       console.log('Tools Execution: Starting tool selection for query:', query);
@@ -32,18 +32,21 @@ export const useToolsExecution = (aiProvider: AiProvider) => {
         console.warn(`Tools Execution: Tool ${selectedToolName} not found, falling back to query tool`);
         console.warn(`Tools Execution: Available tools are:`, Object.keys(toolRegistry));
         console.warn(`Tools Execution: Looking for:`, selectedToolName);
-        return toolRegistry.query(query, contextItems, onChunk, currentConversation);
+        await toolRegistry.query(query, contextItems, onChunk, currentConversation);
+        return 'query';
       }
 
       // Step 4: Execute the selected tool
       console.log(`Tools Execution: Executing tool: ${selectedToolName}`);
-      return toolFunction(query, contextItems, onChunk, currentConversation);
+      await toolFunction(query, contextItems, onChunk, currentConversation);
+      return selectedToolName;
 
     } catch (error) {
       console.error('Tools Execution: Error in tools execution:', error);
       // Fallback to query tool
       const toolRegistry = createToolRegistry(aiProvider, t);
-      return toolRegistry.query(query, contextItems, onChunk, currentConversation);
+      await toolRegistry.query(query, contextItems, onChunk, currentConversation);
+      return 'query';
     }
   }, [selectTool, aiProvider]);
 

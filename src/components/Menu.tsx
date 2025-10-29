@@ -8,13 +8,19 @@ interface Props {
     promptDownloadProgress: number
     onStartPromptDownload: () => void
     onRefreshPromptAvailability: () => void
+    summarizerAvailability?: { status: string; isReady: boolean } | null
+    summarizerDownloadProgress?: number
+    onStartSummarizerDownload?: () => void
 }
 
 export default function Menu({
     promptAvailability,
     promptDownloadProgress,
     onStartPromptDownload,
-    onRefreshPromptAvailability
+    onRefreshPromptAvailability,
+    summarizerAvailability,
+    summarizerDownloadProgress,
+    onStartSummarizerDownload
 }: Props) {
     return (
         <Popover
@@ -29,6 +35,9 @@ export default function Menu({
                         downloadProgress={promptDownloadProgress}
                         onStartDownload={onStartPromptDownload}
                         onRefreshAvailability={onRefreshPromptAvailability}
+                        summarizerAvailability={summarizerAvailability}
+                        summarizerDownloadProgress={summarizerDownloadProgress || 0}
+                        onStartSummarizerDownload={onStartSummarizerDownload}
                     />
                 </>
             }

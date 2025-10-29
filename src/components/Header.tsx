@@ -13,6 +13,9 @@ interface Props {
   promptDownloadProgress: number
   onStartPromptDownload: () => void
   onRefreshPromptAvailability: () => void
+  summarizerAvailability?: { status: string; isReady: boolean } | null
+  summarizerDownloadProgress?: number
+  onStartSummarizerDownload?: () => void
 }
 
 function Header({
@@ -23,7 +26,10 @@ function Header({
   promptAvailability,
   promptDownloadProgress,
   onStartPromptDownload,
-  onRefreshPromptAvailability
+  onRefreshPromptAvailability,
+  summarizerAvailability,
+  summarizerDownloadProgress,
+  onStartSummarizerDownload
 }: Props) {
 
   return (
@@ -53,6 +59,9 @@ function Header({
           promptDownloadProgress={promptDownloadProgress}
           onStartPromptDownload={onStartPromptDownload}
           onRefreshPromptAvailability={onRefreshPromptAvailability}
+          summarizerAvailability={summarizerAvailability}
+          summarizerDownloadProgress={summarizerDownloadProgress}
+          onStartSummarizerDownload={onStartSummarizerDownload}
         />
       </div>
     </div>

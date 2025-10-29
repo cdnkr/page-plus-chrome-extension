@@ -17,6 +17,7 @@ import { SHOW_SUGGESTIONS, SUPPORTED_MODELS } from "../constants"
 import { InputSection } from "../components/input-section/InputSection"
 import Conversation from "../components/conversation/Conversation"
 import { useLanguage } from "../contexts/LanguageContext"
+import { useSummarizerApi } from "../hooks/useSummarizerApi"
 
 export default function Main() {
     const [prevConversations, setPrevConversations] = useState<IConversationStorageItem[]>([]);
@@ -43,6 +44,7 @@ export default function Main() {
 
     const { language } = useLanguage();
     const aiProvider = useAiProvider(selectedModel, currentConversation)
+    const summarizerApi = useSummarizerApi()
     const {
         availability,
         session,
@@ -506,7 +508,7 @@ export default function Main() {
             scrollToBottomOfMessageContainer()
 
             // Execute the prompt with streaming using tools system
-            await executeWithTools(query, contextItemsRef.current.filter(item => item.isActive), (chunk: string) => {
+            const usedTool = await executeWithTools(query, contextItemsRef.current.filter(item => item.isActive), (chunk: string) => {
                 accumulatedResponse += chunk
                 setAiResponse(accumulatedResponse)
                 scrollToBottomOfMessageContainer()
@@ -518,7 +520,8 @@ export default function Main() {
                 content: accumulatedResponse,
                 timestamp: new Date().getTime(),
                 status: 'complete' as const,
-                contextIds: contextItems.filter(item => item.isActive).map(item => item.id)
+                contextIds: contextItems.filter(item => item.isActive).map(item => item.id),
+                toolUsed: usedTool
             }
 
             setCurrentConversation(prev => [...prev, finalResponse])
@@ -634,6 +637,17 @@ export default function Main() {
         }
     }, [checkAvailability])
 
+    // Summarizer API handlers
+    const handleStartSummarizerDownload = useCallback(async () => {
+        try {
+            await summarizerApi.initializeSummarizer()
+        } catch (error) {
+            console.error('Failed to start Summarizer download:', error)
+        }
+    }, [summarizerApi])
+
+    // Summarizer availability refresh is not exposed in UI; omitted
+
     return (
         <main className='relative bg-background h-screen w-full flex flex-col max-w-full'>
             <Header
@@ -645,6 +659,9 @@ export default function Main() {
                 promptDownloadProgress={selectedModel === 'google-nano' ? (downloadProgress || 0) : 0}
                 onStartPromptDownload={handleStartPromptDownload}
                 onRefreshPromptAvailability={handleRefreshPromptAvailability}
+                summarizerAvailability={availability.status === 'available' ? summarizerApi.availability : null}
+                summarizerDownloadProgress={summarizerApi.downloadProgress}
+                onStartSummarizerDownload={handleStartSummarizerDownload}
             />
 
             <div

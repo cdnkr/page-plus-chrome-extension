@@ -10,6 +10,7 @@ export const AVAILABLE_TOOLS: Tool[] = [
   { name: 'Get Code From Element On Page', description: 'get the code for an element on the page', function: 'getCodeFromElementOnPage' },
   { name: 'Analyze Image Colors', description: 'analyze the colors in the image', function: 'analyzeImageColors' },
   { name: 'Summarize', description: 'summarize the context', function: 'summarize' },
+  { name: 'Summarizer (Gemini Nano)', description: 'on-device summarizer (streaming)', function: 'summarizerNano' },
   { name: 'Get Page Images', description: 'extract all images from the current page', function: 'getPageImages' },
 ];
 
@@ -361,6 +362,47 @@ export const createToolRegistry = (aiProvider: AiProvider, t: (path: string, opt
     return aiProvider.executePromptStreaming(query, contextItems, onChunk);
   };
 
+  const summarizerNanoTool: ToolFunction = async (_query, contextItems, onChunk) => {
+    console.log('Summarizer (Gemini Nano) Tool: Starting execution');
+    try {
+      // Gating: require Prompt API (Nano mode) available and Summarizer available
+      const nanoAvailable = ('LanguageModel' in window);
+      const summarizerApi = (window as any).Summarizer;
+      const summarizerAvailable = !!summarizerApi && typeof summarizerApi.availability === 'function' && (await summarizerApi.availability()) === 'available';
+
+      if (!nanoAvailable || !summarizerAvailable) {
+        onChunk('Summarizer is not available on this device/browser. Ensure Google Nano mode and Summarizer are enabled.\n');
+        return;
+      }
+
+      // Collect text from context items
+      const activeText = contextItems
+        .filter((it: any) => it.isActive !== false)
+        .map((it: any) => it.content || '')
+        .join('\n\n')
+        .trim();
+
+      if (!activeText) {
+        onChunk('No text found in context to summarize. Select text or capture the page first.\n');
+        return;
+      }
+
+      const summarizer = await summarizerApi.create({
+        type: 'key-points',
+        format: 'markdown',
+        length: 'medium',
+      });
+
+      const stream = summarizer.summarizeStreaming(activeText);
+      for await (const chunk of stream) {
+        onChunk(String(chunk));
+      }
+    } catch (error) {
+      console.error('Summarizer (Gemini Nano) Tool: Error:', error);
+      onChunk(`\n❌ Error: ${error instanceof Error ? error.message : 'Unknown error'}\n`);
+    }
+  };
+
   const getPageImagesTool: ToolFunction = async (_query, _contextItems, onChunk, _currentConversation) => {
     console.log('GetPageImages Tool: Starting execution');
     
@@ -483,6 +525,7 @@ export const createToolRegistry = (aiProvider: AiProvider, t: (path: string, opt
     getCodeFromElementOnPage: getCodeFromElementOnPageTool,
     analyzeImageColors: analyzeImageColorsTool,
     summarize: summarizeTool,
+    summarizerNano: summarizerNanoTool,
     getPageImages: getPageImagesTool,
   };
 };
