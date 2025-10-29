@@ -8,7 +8,7 @@ export const useLanguageStorage = () => {
 
   useEffect(() => {
     // Load from Chrome storage
-    chrome.storage.local.get(['language'], (result) => {
+    chrome?.storage?.local?.get(['language'], (result) => {
       if (result.language && ['en', 'es', 'ja'].includes(result.language)) {
         setLanguage(result.language);
       }
@@ -18,7 +18,7 @@ export const useLanguageStorage = () => {
 
   const updateLanguage = async (newLanguage: SupportedLanguage) => {
     setLanguage(newLanguage);
-    await chrome.storage.local.set({ language: newLanguage });
+    await chrome?.storage?.local?.set({ language: newLanguage });
   };
 
   return { language, updateLanguage, isLoading };
