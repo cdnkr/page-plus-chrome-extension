@@ -15,6 +15,15 @@ export const i18n = {
                     fallback: "Google's cloud based Gemini Flash model will be used as a fallback.",
                     openFlagsButton: "Open Chrome Flags"
                 }
+            },
+            summarizerApi: {
+                title: "Summarizer API",
+                description: "On-device summarization API. Works independently from Prompt API.",
+                unavailable: {
+                    message: "Summarizer API unavailable. Ensure Chrome flags and device requirements are met.",
+                    openFlagsButton: "Open Flags",
+                    separateAvailability: "Summarizer has separate availability and download from Prompt API."
+                }
             }
         },
         inputSection: {
@@ -110,6 +119,15 @@ export const i18n = {
                     fallback: "El modelo Gemini Flash basado en la nube de Google se usará como respaldo.",
                     openFlagsButton: "Abrir Banderas de Chrome"
                 }
+            },
+            summarizerApi: {
+                title: "API de Resumen",
+                description: "API de resumen en el dispositivo. Funciona independientemente de la API de Prompt.",
+                unavailable: {
+                    message: "API de Resumen no disponible. Asegúrate de que las banderas de Chrome y los requisitos del dispositivo se cumplan.",
+                    openFlagsButton: "Abrir Banderas",
+                    separateAvailability: "La API de Resumen tiene disponibilidad y descarga separadas de la API de Prompt."
+                }
             }
         },
         inputSection: {
@@ -204,6 +222,15 @@ export const i18n = {
                     instructions: "フラグで「Prompt API」を検索し、有効にしてからChromeを再起動してください。",
                     fallback: "GoogleのクラウドベースのGemini Flashモデルがフォールバックとして使用されます。",
                     openFlagsButton: "Chromeフラグを開く"
+                }
+            },
+            summarizerApi: {
+                title: "要約API",
+                description: "オンデバイス要約API。Prompt APIとは独立して動作します。",
+                unavailable: {
+                    message: "要約APIが利用できません。Chromeフラグとデバイスの要件が満たされていることを確認してください。",
+                    openFlagsButton: "フラグを開く",
+                    separateAvailability: "要約APIは、Prompt APIとは別の可用性とダウンロードを持っています。"
                 }
             }
         },

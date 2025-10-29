@@ -274,15 +274,15 @@ export default function ApiStatus({
                 <div className="flex items-center gap-3">
                     <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
-                            <h3 className=" text-sm text-gray-900">Summarizer (Gemini Nano)</h3>
+                            <h3 className=" text-sm text-gray-900">{t('apiStatus.summarizerApi.title')}</h3>
                         </div>
                         <p className="text-xs text-gray-600 mb-2">
-                            On-device summarization API. Works independently from Prompt API.
+                            {t('apiStatus.summarizerApi.description')}
                         </p>
                         {sUnavailable && (
                             <>
                                 <p className="text-xs text-medium mb-2">
-                                    Summarizer API unavailable. Ensure Chrome flags and device requirements are met.
+                                    {t('apiStatus.summarizerApi.unavailable.message')}
                                 </p>
                                 <div className="space-y-2">
                                     <Button
@@ -291,11 +291,11 @@ export default function ApiStatus({
                                         onClick={handleOpenFlags}
                                         className="w-full text-xs bg-black/5 hover:bg-black/10 gap-2"
                                     >
-                                        Open Flags <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-external-link-icon lucide-external-link"><path d="M15 3h6v6" /><path d="M10 14 21 3" /><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /></svg>
+                                        {t('apiStatus.summarizerApi.unavailable.openFlagsButton')} <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-external-link-icon lucide-external-link"><path d="M15 3h6v6" /><path d="M10 14 21 3" /><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /></svg>
                                     </Button>
                                 </div>
                                 <p className="text-xs text-medium mt-2">
-                                    Summarizer has separate availability and download from Prompt API.
+                                    {t('apiStatus.summarizerApi.unavailable.separateAvailability')}
                                 </p>
                             </>
                         )}
