@@ -4,7 +4,7 @@ import { AiProvider, QuotaUsage, ToolSelectionResponse, FormFieldMapping } from 
 import { useLanguage } from '../contexts/LanguageContext';
 import { API_URL } from '../constants';
 
-export const useGeminiApi = (): AiProvider & { executePromptStreamingInternal: any } => {
+export const useGeminiApi = (): AiProvider & { executePromptStreamingInternal: any, hasCheckedAvailability: boolean } => {
   const [availability, setAvailability] = useState<{
     status: 'unavailable' | 'downloadable' | 'downloading' | 'available';
     isReady: boolean;
@@ -444,6 +444,7 @@ export const useGeminiApi = (): AiProvider & { executePromptStreamingInternal: a
     destroySession,
     checkAvailability: undefined, // Gemini doesn't need availability checking
     // Internal method for use by useAiProvider
-    executePromptStreamingInternal
+    executePromptStreamingInternal,
+    hasCheckedAvailability: true
   };
 };

@@ -55,7 +55,8 @@ export default function Main() {
         calculateQuotaUsage,
         destroySession,
         downloadProgress,
-        checkAvailability
+        checkAvailability,
+        hasCheckedAvailability
     } = aiProvider
 
     // for testing
@@ -224,10 +225,10 @@ export default function Main() {
 
     // Set default model to Gemini 2.5 Flash Lite when Nano is unavailable
     useEffect(() => {
-        if (selectedModel === SUPPORTED_MODELS.GOOGLE_NANO && availability.status !== 'available') {
+        if ((selectedModel === SUPPORTED_MODELS.GOOGLE_NANO) && (availability.status !== 'available') && hasCheckedAvailability) {
             setSelectedModel(SUPPORTED_MODELS.GEMINI_2_5_FLASH_LITE)
         }
-    }, [availability.status, selectedModel])
+    }, [availability.status, selectedModel, hasCheckedAvailability])
 
     useEffect(() => {
         if (hasInitializedPrevConversations) return

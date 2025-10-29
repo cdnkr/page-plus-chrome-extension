@@ -36,6 +36,7 @@ interface UsePromptApiReturn {
   calculateQuotaUsage: (contextItems: IContextItem[], query: string, conversationHistory?: IConversationMessage[]) => Promise<QuotaUsage>;
   destroySession: () => void;
   checkAvailability: () => Promise<void>;
+  hasCheckedAvailability: boolean;
 }
 
 export const usePromptApi = (): UsePromptApiReturn => {
@@ -52,8 +53,10 @@ export const usePromptApi = (): UsePromptApiReturn => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [downloadProgress, setDownloadProgress] = useState(0);
+  const [hasCheckedAvailability, setHasCheckedAvailability] = useState(false);
   
   const sessionRef = useRef<any>(null);
+  const availabilityRef = useRef<PromptApiAvailability>({ status: 'unavailable', isReady: false });
   const { language } = useLanguage();
 
   // Check availability on mount
@@ -63,20 +66,37 @@ export const usePromptApi = (): UsePromptApiReturn => {
 
   const checkAvailability = useCallback(async () => {
     try {
+      console.log('Checking Prompt API availability...', {
+        window: Boolean(window),
+        checking: 'LanguageModel' in window,
+      });
       if (!('LanguageModel' in window)) {
+        console.log('Prompt API is not available');
         setAvailability({ status: 'unavailable', isReady: false });
+        setHasCheckedAvailability(true);
         return;
       }
 
       const available = await (window as any).LanguageModel.availability();
+      setHasCheckedAvailability(true);
+      console.log('Prompt API availability:', available);
       const isReady = available === 'available';
+      console.log('Prompt API is ready:', isReady);
       
       setAvailability({ status: available, isReady });
     } catch (err) {
       console.error('Error checking Prompt API availability:', err);
       setAvailability({ status: 'unavailable', isReady: false });
+      setHasCheckedAvailability(true);
     }
   }, []);
+
+  useEffect(() => {
+    if (availabilityRef.current.status !== availability.status) {
+      console.log('Availability changed:', availability.status);
+      availabilityRef.current = { status: availability.status, isReady: availability.isReady };
+    }
+  }, [availability.status]);
 
   const initializeSession = useCallback(async (conversationHistory?: IConversationMessage[]) => {
     if (!availability.isReady && availability.status !== 'downloadable') {
@@ -555,6 +575,7 @@ Return a JSON object where:
     executeFormFillingStructured,
     calculateQuotaUsage,
     destroySession,
-    checkAvailability
+    checkAvailability,
+    hasCheckedAvailability
   };
 };

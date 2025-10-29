@@ -38,4 +38,5 @@ export interface AiProvider {
   calculateQuotaUsage: (contextItems: IContextItem[], query: string, conversationHistory?: IConversationMessage[]) => Promise<QuotaUsage>;
   destroySession: () => void;
   checkAvailability?: () => Promise<void>;
+  hasCheckedAvailability?: boolean;
 }
