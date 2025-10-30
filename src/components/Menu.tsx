@@ -33,11 +33,15 @@ export default function Menu({
     onStartWriterDownload
 }: Props) {
     const [autoSummarizeEnabled, setAutoSummarizeEnabled] = useState(false)
+    const [showSuggestionsAboutPage, setShowSuggestionsAboutPage] = useState(true)
     const { t } = useI18n()
 
     useEffect(() => {
         chrome?.storage?.local?.get(['autoSummarizeOverCharsEnabled'], (result) => {
             setAutoSummarizeEnabled(!!result.autoSummarizeOverCharsEnabled)
+        })
+        chrome?.storage?.local?.get(['showSuggestionsAboutPage'], (result) => {
+            setShowSuggestionsAboutPage(!!result.showSuggestionsAboutPage)
         })
     }, [])
 
@@ -46,6 +50,13 @@ export default function Menu({
         setAutoSummarizeEnabled(next)
         await chrome?.storage?.local?.set({ autoSummarizeOverCharsEnabled: next, autoSummarizeThreshold: {AUTO_SUMMARIZE_THRESHOLD} })
     }
+
+    async function toggleShowSuggestionsAboutPage() {
+        const next = !showSuggestionsAboutPage
+        setShowSuggestionsAboutPage(next)
+        await chrome?.storage?.local?.set({ showSuggestionsAboutPage: next })
+    }
+
     return (
         <Popover
             className="min-w-[320px]"
@@ -75,6 +86,28 @@ export default function Menu({
                                         className={cn(
                                             "absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform duration-200",
                                             autoSummarizeEnabled ? 'translate-x-[16px]' : 'translate-x-0'
+                                        )}
+                                    />
+                                </div>
+                            </label>
+                        </div>
+                        <div className="mt-3 rounded-[12px] flex items-start justify-between">
+                            <div className="flex flex-col gap-1">
+                                <span className="text-sm">{t('options.pageRelatedSuggestions.label')}</span>
+                                <span className="text-xs text-gray-600 max-w-[90%]">{t('options.pageRelatedSuggestions.description')}</span>
+                            </div>
+                            <label className="inline-flex items-center cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    className="sr-only peer"
+                                    checked={showSuggestionsAboutPage}
+                                    onChange={toggleShowSuggestionsAboutPage}
+                                />
+                                <div className="relative w-9 h-5 bg-black/20 rounded-full peer-focus:outline-none peer-checked:bg-black transition-colors">
+                                    <div
+                                        className={cn(
+                                            "absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform duration-200",
+                                            showSuggestionsAboutPage ? 'translate-x-[16px]' : 'translate-x-0'
                                         )}
                                     />
                                 </div>

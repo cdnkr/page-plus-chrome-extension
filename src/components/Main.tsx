@@ -13,7 +13,7 @@ import StatusMessage from "../components/StatusMessage"
 import PageSuggestions from "../components/PageSuggestions"
 import { PageSuggestion } from "../types/suggestions"
 import { generatePageSuggestions } from "../utils/pageSuggestions"
-import { AUTO_SUMMARIZE_THRESHOLD, SHOW_SUGGESTIONS, SUPPORTED_MODELS } from "../constants"
+import { AUTO_SUMMARIZE_THRESHOLD, GENERIC_PAGE_SUGGESTIONS, SHOW_SUGGESTIONS, SUPPORTED_MODELS } from "../constants"
 import { InputSection } from "../components/input-section/InputSection"
 import Conversation from "../components/conversation/Conversation"
 import { useLanguage } from "../contexts/LanguageContext"
@@ -660,6 +660,16 @@ export default function Main() {
 
     async function generateSuggestionsForPage(url: string, screenshot: string, content: string) {
         if (!SHOW_SUGGESTIONS) return; // Check if feature is enabled and prevent multiple simultaneous requests
+
+        const showSuggestionsAboutPage = await chrome?.storage?.local?.get(['showSuggestionsAboutPage'])
+        
+        console.log('showSuggestionsAboutPage', showSuggestionsAboutPage);
+        if (!showSuggestionsAboutPage.showSuggestionsAboutPage) {
+            setPageSuggestions(GENERIC_PAGE_SUGGESTIONS[language]);
+            return;
+        } else {
+            setPageSuggestions([]);
+        }
 
         setIsGeneratingSuggestions(true);
         try {

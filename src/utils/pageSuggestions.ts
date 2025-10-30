@@ -1,6 +1,6 @@
 import { PageSuggestionsResponse } from '../types/suggestions';
 import { AiModel } from '../types/aiProvider';
-import { API_URL, DEFAULT_SUMMARY_MODEL, SUPPORTED_MODELS, USE_GENERIC_SUGGESTIONS } from '../constants';
+import { API_URL, DEFAULT_SUMMARY_MODEL, GENERIC_PAGE_SUGGESTIONS, SUPPORTED_MODELS, USE_GENERIC_SUGGESTIONS } from '../constants';
 import { LANGUAGE_NAMES } from '../i18n';
 
 /**
@@ -34,7 +34,7 @@ async function generatePageSuggestionsWithNano(
   language: 'en' | 'es' | 'ja',
   content?: string,
 ): Promise<PageSuggestionsResponse> {
-  if (USE_GENERIC_SUGGESTIONS) return getFallbackSuggestions();
+  if (USE_GENERIC_SUGGESTIONS) return getFallbackSuggestions(language);
 
   try {
     // Check if Chrome Prompt API is available
@@ -131,7 +131,7 @@ async function generatePageSuggestionsWithNano(
 
   } catch (error) {
     console.error('Failed to generate page suggestions with Gemini Nano:', error);
-    return getFallbackSuggestions();
+    return getFallbackSuggestions(language);
   }
 }
 
@@ -145,7 +145,7 @@ async function generatePageSuggestionsWithGemini(
   language: 'en' | 'es' | 'ja',
   content?: string,
 ): Promise<PageSuggestionsResponse> {
-  if (USE_GENERIC_SUGGESTIONS) return getFallbackSuggestions();
+  if (USE_GENERIC_SUGGESTIONS) return getFallbackSuggestions(language);
 
   try {
     // Get API base URL from environment
@@ -236,7 +236,7 @@ async function generatePageSuggestionsWithGemini(
 
   } catch (error) {
     console.error('Failed to generate page suggestions with Gemini Pro:', error);
-    return getFallbackSuggestions();
+    return getFallbackSuggestions(language);
   }
 }
 
@@ -502,19 +502,8 @@ where title and description will be displayed to the user and prompt will be the
 /**
  * Get fallback suggestions when AI generation fails
  */
-function getFallbackSuggestions(): PageSuggestionsResponse {
+export function getFallbackSuggestions(language: 'en' | 'es' | 'ja'): PageSuggestionsResponse {
   return {
-    suggestions: [
-      {
-        title: "Summarize this page",
-        description: "Get a brief overview of the main content and purpose of this page",
-        prompt: "Please provide a concise summary of this page's main content and purpose."
-      },
-      {
-        title: "Key information",
-        description: "Extract the most important facts and details from this page",
-        prompt: "What are the key pieces of information on this page that I should know?"
-      }
-    ]
+    suggestions: GENERIC_PAGE_SUGGESTIONS[language]
   };
 }
