@@ -76,7 +76,7 @@ export default function Main() {
                 storedConversations[currentIndex] = {
                     ...storedConversations[currentIndex],
                     conversations: [...storedConversations[currentIndex].conversations, userMessage, aiResponse],
-                    contexts: contextItems, // Also save the current context items
+                    contexts: contextItemsRef.current, // Also save the current context items
                     lastModified: Date.now(),
                     title: storedConversations[currentIndex].title === 'New Chat'
                         ? userMessage.content.slice(0, 50) + (userMessage.content.length > 50 ? '...' : '')
