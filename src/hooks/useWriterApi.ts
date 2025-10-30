@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 type AvailabilityStatus = 'unavailable' | 'downloadable' | 'downloading' | 'available';
 
@@ -25,6 +26,7 @@ export function useWriterApi(): UseWriterApiReturn {
   const [downloadProgress, setDownloadProgress] = useState(0);
 
   const writerRef = useRef<any>(null);
+  const { language } = useLanguage();
 
   const checkAvailability = useCallback(async () => {
     try {
@@ -32,13 +34,17 @@ export function useWriterApi(): UseWriterApiReturn {
         setAvailability({ status: 'unavailable', isReady: false });
         return;
       }
-      const status = await (window as any).Writer.availability();
+      const status = await (window as any).Writer.availability({
+        expectedInputLanguages: ['en', language],
+        expectedContextLanguages: ['en', language],
+        outputLanguage: language,
+      });
       setAvailability({ status, isReady: status === 'available' });
     } catch (e) {
       console.error('Writer: availability check failed', e);
       setAvailability({ status: 'unavailable', isReady: false });
     }
-  }, []);
+  }, [language]);
 
   useEffect(() => {
     checkAvailability();
@@ -58,6 +64,9 @@ export function useWriterApi(): UseWriterApiReturn {
         tone: 'neutral',
         format: 'markdown',
         length: 'medium',
+        expectedInputLanguages: ['en', language],
+        expectedContextLanguages: ['en', language],
+        outputLanguage: language,
         monitor(m: any) {
           m.addEventListener('downloadprogress', (e: any) => {
             const progress = (e.loaded || 0) * 100;
@@ -74,7 +83,7 @@ export function useWriterApi(): UseWriterApiReturn {
     } finally {
       setIsLoading(false);
     }
-  }, [checkAvailability]);
+  }, [checkAvailability, language]);
 
   const writeStreaming = useCallback(async (prompt: string, onChunk: (chunk: string) => void, context?: string) => {
     if (!writerRef.current) {

@@ -77,7 +77,15 @@ export const usePromptApi = (): UsePromptApiReturn => {
         return;
       }
 
-      const available = await (window as any).LanguageModel.availability();
+      const available = await (window as any).LanguageModel.availability({
+        expectedInputs: [
+          { type: "text", languages: ["en", language] },
+          { type: "image", languages: ["en", language] }
+        ],
+        expectedOutputs: [
+          { type: "text", languages: [language] }
+        ]
+      });
       setHasCheckedAvailability(true);
       console.log('Prompt API availability:', available);
       const isReady = available === 'available';
@@ -89,7 +97,7 @@ export const usePromptApi = (): UsePromptApiReturn => {
       setAvailability({ status: 'unavailable', isReady: false });
       setHasCheckedAvailability(true);
     }
-  }, []);
+  }, [language]);
 
   useEffect(() => {
     if (availabilityRef.current.status !== availability.status) {
@@ -118,11 +126,11 @@ export const usePromptApi = (): UsePromptApiReturn => {
         initialPrompts, // Load conversation history into the session
         // Configure for multimodal support (text and images)
         expectedInputs: [
-          { type: "text", languages: ["en"] },
-          { type: "image", languages: ["en"] }
+          { type: "text", languages: ["en", language] },
+          { type: "image", languages: ["en", language] }
         ],
         expectedOutputs: [
-          { type: "text", languages: ["en"] }
+          { type: "text", languages: [language] }
         ],
         monitor(m: any) {
           m.addEventListener('downloadprogress', (e: any) => {
@@ -148,7 +156,7 @@ export const usePromptApi = (): UsePromptApiReturn => {
     } finally {
       setIsLoading(false);
     }
-  }, [availability.isReady, availability.status]);
+  }, [availability.isReady, availability.status, language]);
 
   const formatContextItems = useCallback((contextItems: IContextItem[]): any[] => {
     return contextItems.map(item => {
@@ -395,10 +403,10 @@ export const usePromptApi = (): UsePromptApiReturn => {
       const toolSelectionSession = await (window as any).LanguageModel.create({
         initialPrompts: [],
         expectedInputs: [
-          { type: "text", languages: ["en"] }
+          { type: "text", languages: ["en", language] }
         ],
         expectedOutputs: [
-          { type: "text", languages: ["en"] }
+          { type: "text", languages: [language] }
         ]
       });
 
@@ -454,7 +462,7 @@ export const usePromptApi = (): UsePromptApiReturn => {
       setError(errorMessage);
       throw new Error(errorMessage);
     }
-  }, [session.session, session.isActive, formatContextItems, getLanguageInstruction]);
+  }, [session.session, session.isActive, formatContextItems, getLanguageInstruction, language]);
 
   const executeFormFillingStructured = useCallback(async (
     query: string, 

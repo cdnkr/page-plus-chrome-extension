@@ -43,7 +43,14 @@ async function generatePageSuggestionsWithNano(
     }
 
     // Check availability
-    const availability = await (window as any).LanguageModel.availability();
+    const availability = await (window as any).LanguageModel.availability({
+      expectedInputs: [
+        { type: "image", languages: ["en", language] }
+      ],
+      expectedOutputs: [
+        { type: "text", languages: [language] }
+      ]
+    });
     if (availability !== 'available') {
       throw new Error('Gemini Nano is not available');
     }
@@ -51,10 +58,10 @@ async function generatePageSuggestionsWithNano(
     // Create a new session for this request with image input support
     const session = await (window as any).LanguageModel.create({
       expectedInputs: [
-        { type: "image", languages: ["en"] }
+        { type: "image", languages: ["en", language] }
       ],
       expectedOutputs: [
-        { type: "text", languages: ["en"] }
+        { type: "text", languages: [language] }
       ]
     });
 
@@ -285,21 +292,28 @@ async function generateContentSummaryWithNano(currentPageUrl: string, content: s
       throw new Error('Chrome Prompt API is not available');
     }
 
-    // Check availability
-    const availability = await (window as any).LanguageModel.availability();
+  // Check availability
+  const availability = await (window as any).LanguageModel.availability({
+    expectedInputs: [
+      { type: "text", languages: language === 'en' ? ['en'] : ['en', language] }
+    ],
+    expectedOutputs: [
+      { type: "text", languages: [language] }
+    ],
+  });
     if (availability !== 'available') {
       throw new Error('Gemini Nano is not available');
     }
 
-    // Create a new session for summarization
-    const session = await (window as any).LanguageModel.create({
-      expectedInputs: [
-        { type: "text", languages: language === 'en' ? ['en'] : ['en', language] }
-      ],
-      expectedOutputs: [
-        { type: "text", languages: [language] }
-      ],
-    });
+  // Create a new session for summarization
+  const session = await (window as any).LanguageModel.create({
+    expectedInputs: [
+      { type: "text", languages: language === 'en' ? ['en'] : ['en', language] }
+    ],
+    expectedOutputs: [
+      { type: "text", languages: [language] }
+    ],
+  });
 
     const summaryPrompt = `Please provide a quick short and concise summary of the following page content from ${currentPageUrl}:
 
