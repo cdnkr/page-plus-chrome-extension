@@ -41,7 +41,8 @@ export default function Main() {
     const [processingContextId, setProcessingContextId] = useState<string | null>(null)
     const [autoSummarizeEnabled, setAutoSummarizeEnabled] = useState(false)
     const [autoSummarizeThreshold, setAutoSummarizeThreshold] = useState(AUTO_SUMMARIZE_THRESHOLD)
-    
+    const [privacyFirstModeEnabled, setPrivacyFirstModeEnabled] = useState(false)
+
     const inputSectionRef = useRef<HTMLDivElement | null>(null)
     const contextItemsRef = useRef<IContextItem[]>([])
     const messageContainerRef = useRef<HTMLDivElement | null>(null)
@@ -663,7 +664,6 @@ export default function Main() {
 
         const showSuggestionsAboutPage = await chrome?.storage?.local?.get(['showSuggestionsAboutPage'])
         
-        console.log('showSuggestionsAboutPage', showSuggestionsAboutPage);
         if (!showSuggestionsAboutPage.showSuggestionsAboutPage) {
             setPageSuggestions(GENERIC_PAGE_SUGGESTIONS[language]);
             return;
@@ -779,6 +779,8 @@ export default function Main() {
                 writerAvailability={availability.status === 'available' ? writerApi.availability : null}
                 writerDownloadProgress={writerApi.downloadProgress}
                 onStartWriterDownload={handleStartWriterDownload}
+                privacyFirstModeEnabled={privacyFirstModeEnabled}
+                setPrivacyFirstModeEnabled={setPrivacyFirstModeEnabled}
             />
 
             <div
@@ -833,6 +835,8 @@ export default function Main() {
                     contextPerc={contextPerc}
                     availability={availability}
                     processingContextId={processingContextId}
+                    isPrivacyFirstEnabled={privacyFirstModeEnabled}
+                    setIsPrivacyFirstEnabled={setPrivacyFirstModeEnabled}
                 />
             </div>
         </main>

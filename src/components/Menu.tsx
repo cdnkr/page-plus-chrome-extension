@@ -18,6 +18,8 @@ interface Props {
     writerAvailability?: { status: string; isReady: boolean } | null
     writerDownloadProgress?: number
     onStartWriterDownload?: () => void
+    privacyFirstModeEnabled: boolean
+    setPrivacyFirstModeEnabled: (val: boolean) => void
 }
 
 export default function Menu({
@@ -30,11 +32,27 @@ export default function Menu({
     onStartSummarizerDownload,
     writerAvailability,
     writerDownloadProgress,
-    onStartWriterDownload
+    onStartWriterDownload,
+    privacyFirstModeEnabled,
+    setPrivacyFirstModeEnabled
 }: Props) {
     const [autoSummarizeEnabled, setAutoSummarizeEnabled] = useState(false)
     const [showSuggestionsAboutPage, setShowSuggestionsAboutPage] = useState(true)
+    const [isPageRelatedSuggestionsAccessible, setIsPageRelatedSuggestionsAccessible] = useState(true)
+    const [isPrivacyFirstAccessible, setIsPrivacyFirstAccessible] = useState(false)
+
     const { t } = useI18n()
+
+    useEffect(() => {
+        if (
+            promptAvailability?.status === "available"
+            && summarizerAvailability?.status === "available"
+        ) {
+            setIsPrivacyFirstAccessible(true)
+        } else {
+            setIsPrivacyFirstAccessible(false)
+        }
+    }, [promptAvailability, summarizerAvailability])
 
     useEffect(() => {
         chrome?.storage?.local?.get(['autoSummarizeOverCharsEnabled'], (result) => {
@@ -43,18 +61,34 @@ export default function Menu({
         chrome?.storage?.local?.get(['showSuggestionsAboutPage'], (result) => {
             setShowSuggestionsAboutPage(!!result.showSuggestionsAboutPage)
         })
+        chrome?.storage?.local?.get(['privacyFirstModeEnabled'], (result) => {
+            setPrivacyFirstModeEnabled(!!result.privacyFirstModeEnabled)
+        })
     }, [])
 
     async function toggleAutoSummarize() {
         const next = !autoSummarizeEnabled
         setAutoSummarizeEnabled(next)
-        await chrome?.storage?.local?.set({ autoSummarizeOverCharsEnabled: next, autoSummarizeThreshold: {AUTO_SUMMARIZE_THRESHOLD} })
+        await chrome?.storage?.local?.set({ autoSummarizeOverCharsEnabled: next, autoSummarizeThreshold: { AUTO_SUMMARIZE_THRESHOLD } })
     }
 
-    async function toggleShowSuggestionsAboutPage() {
-        const next = !showSuggestionsAboutPage
+    async function toggleShowSuggestionsAboutPage(next?: boolean) {
+        next = typeof next === 'boolean' ? next : !showSuggestionsAboutPage
         setShowSuggestionsAboutPage(next)
         await chrome?.storage?.local?.set({ showSuggestionsAboutPage: next })
+    }
+
+    async function togglePrivacyFirstMode() {
+        const next = !privacyFirstModeEnabled
+        setPrivacyFirstModeEnabled(next)
+        await chrome?.storage?.local?.set({ privacyFirstModeEnabled: next })
+
+        if (next) {
+            toggleShowSuggestionsAboutPage(false)
+            setIsPageRelatedSuggestionsAccessible(false)
+        } else {
+            setIsPageRelatedSuggestionsAccessible(true)
+        }
     }
 
     return (
@@ -91,7 +125,12 @@ export default function Menu({
                                 </div>
                             </label>
                         </div>
-                        <div className="mt-3 rounded-[12px] flex items-start justify-between">
+                        <div
+                            className={cn(
+                                "mt-3 rounded-[12px] flex items-start justify-between",
+                                !isPageRelatedSuggestionsAccessible ? "opacity-50 cursor-not-allowed pointer-events-none" : ""
+                            )}
+                        >
                             <div className="flex flex-col gap-1">
                                 <span className="text-sm">{t('options.pageRelatedSuggestions.label')}</span>
                                 <span className="text-xs text-gray-600 max-w-[90%]">{t('options.pageRelatedSuggestions.description')}</span>
@@ -101,13 +140,46 @@ export default function Menu({
                                     type="checkbox"
                                     className="sr-only peer"
                                     checked={showSuggestionsAboutPage}
-                                    onChange={toggleShowSuggestionsAboutPage}
+                                    onChange={() => toggleShowSuggestionsAboutPage()}
                                 />
                                 <div className="relative w-9 h-5 bg-black/20 rounded-full peer-focus:outline-none peer-checked:bg-black transition-colors">
                                     <div
                                         className={cn(
                                             "absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform duration-200",
                                             showSuggestionsAboutPage ? 'translate-x-[16px]' : 'translate-x-0'
+                                        )}
+                                    />
+                                </div>
+                            </label>
+                        </div>
+                        <div
+                            className={cn(
+                                "mt-3 rounded-[12px] flex items-start justify-between",
+                                !isPrivacyFirstAccessible ? "opacity-50 cursor-not-allowed pointer-events-none" : ""
+                            )}
+                        >
+                            <div className="flex flex-col gap-1">
+                                <div className="flex items-center gap-2">
+                                    <span className="text-sm">{t('options.privacyFirst.label')}</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-shield-half-icon lucide-shield-half"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="M12 22V2"/></svg>
+                                </div>
+                                <span className="text-xs text-gray-600 max-w-[90%]">{t('options.privacyFirst.description')}</span>
+                                {!isPrivacyFirstAccessible && (
+                                    <span className="text-xs text-black max-w-[90%]">{t('options.privacyFirst.info')}</span>
+                                )}
+                            </div>
+                            <label className="inline-flex items-center cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    className="sr-only peer"
+                                    checked={privacyFirstModeEnabled}
+                                    onChange={togglePrivacyFirstMode}
+                                />
+                                <div className="relative w-9 h-5 bg-black/20 rounded-full peer-focus:outline-none peer-checked:bg-black transition-colors">
+                                    <div
+                                        className={cn(
+                                            "absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform duration-200",
+                                            privacyFirstModeEnabled ? 'translate-x-[16px]' : 'translate-x-0'
                                         )}
                                     />
                                 </div>

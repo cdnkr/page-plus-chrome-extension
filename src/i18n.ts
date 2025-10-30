@@ -100,7 +100,12 @@ export const i18n = {
             pageRelatedSuggestions: {
                 label: "Show page-related suggestions",
                 description: "For new chats, suggestions are generated from the current page's content. When off, generic suggestions are shown.",
-            }
+            },
+            privacyFirst : {
+                label: "Privacy-first mode",
+                description: "When enabled, only offline on-device models are used, ensuring no data leaves your browser. This disables features that require online processing, such as page-related suggestions.",
+                info: "This feature depends on Chrome's on-device APIs. See their status below to ensure they are enabled."
+            },
         },
     },
 
@@ -209,6 +214,11 @@ export const i18n = {
                 label: "Mostrar sugerencias relacionadas con la página",
                 description: "En los chats nuevos, las sugerencias se generan a partir del contenido de la página actual. Si se desactiva, se mostrarán sugerencias genéricas.",
             },
+            privacyFirst : {
+                label: "Modo de privacidad",
+                description: "Cuando está activado, solo se usan modelos locales en el dispositivo, asegurando que ningún dato salga de tu navegador. Esto deshabilita las funciones que requieren procesamiento en línea, como las sugerencias relacionadas con la página.",
+                info: "Esta función depende de las API en el dispositivo de Chrome. Consulta su estado a continuación para asegurarte de que estén habilitadas."
+            },
         },
     },
 
@@ -311,6 +321,11 @@ export const i18n = {
             pageRelatedSuggestions: {
                 label: "ページ関連の提案を表示",
                 description: "新しいチャットでは、現在のページの内容に基づいて提案が生成されます。オフにすると、一般的な提案が表示されます。",
+            },
+            privacyFirst : {
+                label: "プライバシー優先モード",
+                description: "有効にすると、オフラインのオンデバイスモデルのみが使用され、データがブラウザから送信されないことが保証されます。これにより、ページ関連の提案など、オンライン処理を必要とする機能は無効になります。",
+                info: "この機能は、ChromeのオンデバイスAPIに依存しています。以下でステータスを確認し、有効になっていることを確認してください。"
             },
         },
     },

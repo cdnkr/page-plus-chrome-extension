@@ -1,4 +1,4 @@
-import { Dispatch, forwardRef, SetStateAction } from "react"
+import { Dispatch, forwardRef, SetStateAction, useEffect } from "react"
 import ContextItem from "../ContextItem"
 import Button from "../ui/Button"
 import ContextMenu, { IOption } from "../ui/ContextMenu"
@@ -30,6 +30,8 @@ interface InputSectionProps {
         isReady: boolean
     }
     processingContextId?: string | null
+    isPrivacyFirstEnabled: boolean,
+    setIsPrivacyFirstEnabled: (val: boolean) => void
 }
 
 export const InputSection = forwardRef<HTMLDivElement, InputSectionProps>(({
@@ -47,8 +49,22 @@ export const InputSection = forwardRef<HTMLDivElement, InputSectionProps>(({
     contextPerc,
     availability,
     processingContextId,
+    isPrivacyFirstEnabled,
+    setIsPrivacyFirstEnabled
 }, ref) => {
     const { t } = useI18n()
+
+    useEffect(() => {
+        chrome?.storage?.local?.get(['privacyFirstModeEnabled'], (result) => {
+            setIsPrivacyFirstEnabled(!!result.privacyFirstModeEnabled)
+        })
+    }, [])
+
+    useEffect(() => {
+        if (isPrivacyFirstEnabled) {
+            handleModelChange(SUPPORTED_MODELS.GOOGLE_NANO)
+        }
+    }, [isPrivacyFirstEnabled])
 
     function activateTextSelection() {
         chrome?.runtime?.sendMessage({ action: 'activateTextSelection' });
@@ -93,13 +109,15 @@ export const InputSection = forwardRef<HTMLDivElement, InputSectionProps>(({
             icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-cloud-icon lucide-cloud"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z" /></svg>,
             label: 'Gemini 2.5 Pro',
             description: 'Cloud-based model',
-            action: () => handleModelChange(SUPPORTED_MODELS.GEMINI_2_5_PRO)
+            action: () => handleModelChange(SUPPORTED_MODELS.GEMINI_2_5_PRO),
+            disabled: isPrivacyFirstEnabled
         },
         {
             icon: <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-cloud-icon lucide-cloud"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z" /></svg>,
             label: 'Gemini 2.5 Flash Lite',
             description: 'Cloud-based model',
-            action: () => handleModelChange(SUPPORTED_MODELS.GEMINI_2_5_FLASH_LITE)
+            action: () => handleModelChange(SUPPORTED_MODELS.GEMINI_2_5_FLASH_LITE),
+            disabled: isPrivacyFirstEnabled
         }
     ]
 

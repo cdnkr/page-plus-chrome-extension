@@ -60,7 +60,7 @@ export default function ContextMenu({
                                 className={cn(
                                     "flex items-center gap-3 text-sm rounded-[12px] text-black/70 p-2",
                                     option.disabled 
-                                        ? "opacity-50 cursor-not-allowed" 
+                                        ? "opacity-50 cursor-not-allowed pointer-events-none" 
                                         : "hover:bg-black/5 hover:text-black cursor-pointer"
                                 )}
                             >
