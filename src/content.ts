@@ -68,13 +68,13 @@ initializePageChangeDetection();
 
 function initializePageChangeDetection() {
   // Check for URL changes periodically (for SPA navigation)
-  setInterval(() => {
-    const currentUrl = window.location.href;
-    if (currentUrl !== lastPageUrl) {
-      lastPageUrl = currentUrl;
-      notifyPageChange();
-    }
-  }, 1000);
+  // setInterval(() => {
+  //   const currentUrl = window.location.href;
+  //   if (currentUrl !== lastPageUrl) {
+  //     lastPageUrl = currentUrl;
+  //     notifyPageChange();
+  //   }
+  // }, 1000);
 
   window.addEventListener('DOMContentLoaded', () => {
     notifyPageChange()
@@ -123,22 +123,11 @@ function notifyPageChange() {
   const segments = extractStructuredTextWithLinks(bodyHTML);
   const pageContent = segmentsToMarkdown(segments);
 
-  // Request screenshot from background script instead of extracting text content
   chrome.runtime.sendMessage({
-    action: 'captureFullPage',
-    url: window.location.href
-  }, (response) => {
-    if (response && response.screenshotData) {
-      // Send page change notification to side panel with screenshot
-      chrome.runtime.sendMessage({
-        action: 'pageChanged',
-        url: window.location.href,
-        screenshot: response.screenshotData,
-        content: pageContent
-      });
-    } else {
-      console.error('Failed to capture screenshot for page change');
-    }
+    action: 'pageChanged',
+    url: window.location.href,
+    screenshot: '',
+    content: pageContent
   });
 }
 
@@ -150,22 +139,11 @@ function handleTabChange() {
   const segments = extractStructuredTextWithLinks(bodyHTML);
   const pageContent = segmentsToMarkdown(segments);
 
-  // Request screenshot from background script instead of extracting text content
   chrome.runtime.sendMessage({
-    action: 'captureFullPage',
-    url: window.location.href
-  }, (response) => {
-    if (response && response.screenshotData) {
-      // Send page change notification to side panel with screenshot
-      chrome.runtime.sendMessage({
-        action: 'pageChanged',
-        url: window.location.href,
-        screenshot: response.screenshotData,
-        content: pageContent
-      });
-    } else {
-      console.error('Failed to capture screenshot for tab change');
-    }
+    action: 'pageChanged',
+    url: window.location.href,
+    screenshot: '',
+    content: pageContent
   });
 }
 
