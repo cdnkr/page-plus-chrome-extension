@@ -20,7 +20,7 @@ export default function ContextItem({ item, onRemoveContextItem, showRemoveButto
     return (
         <div className={cn(
             'group',
-            'w-full relative rounded-[20px] bg-black/5 text-black p-2',
+            'w-full relative rounded-[20px] bg-black/5 border border-black/10 text-black p-2',
             'h-[100px]',
             ((item.type === 'image') || (item.type === 'page')) ? 'p-0' : '',
             // "relative after:content-[''] after:absolute after:inset-x-0 after:bottom-0 after:h-[100%] after:bg-gradient-to-t after:from-black/20 after:to-transparent after:z-0 after:rounded-b-[20px]"
