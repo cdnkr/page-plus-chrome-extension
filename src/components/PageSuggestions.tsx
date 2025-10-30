@@ -34,7 +34,7 @@ export default function PageSuggestions({ suggestions, isLoading, onSuggestionCl
   }
 
   return (
-    <div className="w-full p-4">
+    <div className="w-full p-4 pb-[200px]">
       <div className="text-sm text-black/80 mb-3">
         {t('pageSuggestions.suggestionsFor')} <span className="font-medium text-black">{currentPageUrl.length > 22 ? currentPageUrl.slice(0, 22) + '...' : removeTrailingSlash(currentPageUrl)}</span>
       </div>
