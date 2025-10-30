@@ -161,7 +161,7 @@ export const InputSection = forwardRef<HTMLDivElement, InputSectionProps>(({
                         }}
                         className='w-full h-full text-sm resize-none outline-none'
                         placeholder={t('inputSection.placeholder')}
-                        rows={Math.ceil(query.length / TEXTAREA_PER_ROW)}
+                        rows={Math.ceil(query.length / TEXTAREA_PER_ROW) < 2 ? 2 : Math.ceil(query.length / TEXTAREA_PER_ROW)}
                     />
                 </div>
                 <div className='flex p-2 justify-between items-end'>
