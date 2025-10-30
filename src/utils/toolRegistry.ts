@@ -9,9 +9,9 @@ export const AVAILABLE_TOOLS: Tool[] = [
   { name: 'Fill Form', description: 'fill out a form with the given data', function: 'fillForm' },
   { name: 'Get Code From Element On Page', description: 'get the code for an element on the page', function: 'getCodeFromElementOnPage' },
   { name: 'Analyze Image Colors', description: 'analyze the colors in the image', function: 'analyzeImageColors' },
-  { name: 'Summarize', description: 'summarize the context', function: 'summarize' },
-  { name: 'Summarizer (Gemini Nano)', description: 'on-device summarizer (streaming)', function: 'summarizerNano' },
-  { name: 'Writer (Gemini Nano)', description: 'on-device content writing', function: 'writerNano' },
+  // { name: 'Summarize', description: 'summarize the context', function: 'summarize' },
+  // { name: 'Summarizer (Gemini Nano)', description: 'on-device summarizer (streaming)', function: 'summarizerNano' },
+  // { name: 'Writer (Gemini Nano)', description: 'on-device content writing', function: 'writerNano' },
   { name: 'Get Page Images', description: 'extract all images from the current page', function: 'getPageImages' },
 ];
 
