@@ -93,7 +93,7 @@ export default function Main() {
                     id: generateId(),
                     title: userMessage.content.slice(0, 50) + (userMessage.content.length > 50 ? '...' : ''),
                     conversations: [userMessage, aiResponse],
-                    contexts: contextItems,
+                    contexts: contextItemsRef.current,
                     timestamp: Date.now(),
                     lastModified: Date.now(),
                     isActive: true
