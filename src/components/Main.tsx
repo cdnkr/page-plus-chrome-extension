@@ -445,7 +445,7 @@ export default function Main() {
                 }
             } else if (message.action === 'pageChanged') {
                 // Handle page change - generate suggestions for new pages
-                if (message.url && message.screenshot) {
+                if (message.url && message.content) {
                     setCurrentPageUrl(message.url?.replace(/^https?:\/\//, ''));
                     setIsGeneratingSuggestions(false);
                     generateSuggestionsForPage(message.url, message.screenshot, message.content);
