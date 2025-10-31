@@ -54,6 +54,12 @@ function History({
     const [open, setOpen] = useState(false)
     const { t } = useI18n()
 
+    const sortedPrevConversations = [...prevConversations].sort((a, b) => {
+        const aTime = new Date(a.lastModified).getTime()
+        const bTime = new Date(b.lastModified).getTime()
+        return bTime - aTime
+    })
+
     function handleSwitchToConversation(convId: string) {
         switchToConversation(convId)
         setOpen(false)
@@ -73,14 +79,14 @@ function History({
                         // prevConversations.length > 4 ? 'before:content-[""] before:z-1 before:absolute before:inset-x-0 before:-top-[0px] before:h-[40px] before:bg-gradient-to-b before:rounded-b-[25px] before:from-background before:to-transparent' : '',
                     )}
                 >
-                    {prevConversations.map((prevConv, index) => (
+                    {sortedPrevConversations.map((prevConv, index) => (
                         <div
                             key={prevConv.id}
                             className={
                                 cn(
                                     'p-3 border-b border-gray-400 cursor-pointer hover:bg-black/5 relative',
                                     prevConv.isActive ? 'bg-black/10 hover:bg-black/10 cursor-default' : '',
-                                    index === (prevConversations.length - 1) ? 'border-b-0' : ''
+                                    index === (sortedPrevConversations.length - 1) ? 'border-b-0' : ''
                                 )
                             }
                             onClick={() => handleSwitchToConversation(prevConv.id)}
