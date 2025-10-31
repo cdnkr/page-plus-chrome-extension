@@ -290,6 +290,7 @@ function handleEscapeKey(event: KeyboardEvent) {
   if (event.key === 'Escape') {
     if (isSelectionModeActive) {
       deactivateTextSelectionMode();
+      removeFullPageOverlay();
     }
     if (isAreaSelectionModeActive) {
       deactivateAreaSelectionMode();
@@ -342,6 +343,7 @@ function deactivateAreaSelectionMode() {
   document.removeEventListener('mousemove', handleAreaSelectionMove);
   document.removeEventListener('mouseup', handleAreaSelectionEnd);
   document.removeEventListener('keydown', handleEscapeKey);
+  removeFullPageOverlay();
 }
 
 function createAreaSelectionOverlay() {
