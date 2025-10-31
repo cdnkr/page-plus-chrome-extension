@@ -3,7 +3,7 @@ import { AiModel } from "./types/aiProvider"
 export const SUPPORTED_MODELS: { [key: string]: AiModel } = {
   GEMINI_2_5_PRO: 'gemini-2.5-pro',
   GEMINI_2_5_FLASH_LITE: 'gemini-2.5-flash-lite',
-  GOOGLE_NANO: 'google-nano'
+  GEMINI_NANO: 'gemini-nano'
 }
 
 export const CONTEXT_CHAR_DISPLAY_LIMIT = 80

@@ -31,7 +31,7 @@ export default function Main() {
     const [isStreaming, setIsStreaming] = useState(false)
     const [status, setStatus] = useState<IStatusMessage | null>(null)
     const [hasInitializedPrevConversations, setHasInitializedPrevConversations] = useState(false)
-    const [selectedModel, setSelectedModel] = useState<AiModel>(SUPPORTED_MODELS.GOOGLE_NANO)
+    const [selectedModel, setSelectedModel] = useState<AiModel>(SUPPORTED_MODELS.GEMINI_NANO)
     const [pageSuggestions, setPageSuggestions] = useState<PageSuggestion[]>([])
     const [isGeneratingSuggestions, setIsGeneratingSuggestions] = useState(false)
     const [showPageSuggestions, setShowPageSuggestions] = useState(true)
@@ -228,7 +228,7 @@ export default function Main() {
 
     // Set default model to Gemini 2.5 Flash Lite when Nano is unavailable
     useEffect(() => {
-        if ((selectedModel === SUPPORTED_MODELS.GOOGLE_NANO) && (availability.status !== 'available') && hasCheckedAvailability) {
+        if ((selectedModel === SUPPORTED_MODELS.GEMINI_NANO) && (availability.status !== 'available') && hasCheckedAvailability) {
             setSelectedModel(SUPPORTED_MODELS.GEMINI_2_5_FLASH_LITE)
         }
     }, [availability.status, selectedModel, hasCheckedAvailability])
@@ -769,8 +769,8 @@ export default function Main() {
                 switchToConversation={switchToConversation}
                 deleteConversation={deleteConversation}
                 prevConversations={prevConversations}
-                promptAvailability={selectedModel === 'google-nano' ? availability : null}
-                promptDownloadProgress={selectedModel === 'google-nano' ? (downloadProgress || 0) : 0}
+                promptAvailability={selectedModel === 'gemini-nano' ? availability : null}
+                promptDownloadProgress={selectedModel === 'gemini-nano' ? (downloadProgress || 0) : 0}
                 onStartPromptDownload={handleStartPromptDownload}
                 onRefreshPromptAvailability={handleRefreshPromptAvailability}
                 summarizerAvailability={availability.status === 'available' ? summarizerApi.availability : null}

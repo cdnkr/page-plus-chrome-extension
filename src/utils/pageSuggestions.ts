@@ -15,7 +15,7 @@ export async function generatePageSuggestions(
   model: AiModel = DEFAULT_SUMMARY_MODEL,
 ): Promise<PageSuggestionsResponse> {
   switch (model) {
-    case 'google-nano':
+    case 'gemini-nano':
       return generatePageSuggestionsWithNano(currentPageUrl, screenshot, language, content);
     case 'gemini-2.5-flash-lite':
       return generatePageSuggestionsWithGemini(currentPageUrl, screenshot, language, content);

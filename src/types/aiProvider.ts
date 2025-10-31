@@ -1,6 +1,6 @@
 import { IContextItem, IConversationMessage } from './conversation';
 
-export type AiModel = 'google-nano' | 'gemini-2.5-pro' | 'gemini-2.5-flash-lite';
+export type AiModel = 'gemini-nano' | 'gemini-2.5-pro' | 'gemini-2.5-flash-lite';
 
 export interface QuotaUsage {
   current: number;

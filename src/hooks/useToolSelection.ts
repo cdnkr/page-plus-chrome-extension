@@ -30,7 +30,7 @@ export const useToolSelection = (
 
     // Check if Writer should be available
     const isWriterAvailable = writerAvailability?.status === 'available' && writerAvailability?.isReady;
-    const isNanoSelected = selectedModel === SUPPORTED_MODELS.GOOGLE_NANO;
+    const isNanoSelected = selectedModel === SUPPORTED_MODELS.GEMINI_NANO;
     const shouldShowWriter = isWriterAvailable && isNanoSelected;
 
     // Filter available tools based on context
