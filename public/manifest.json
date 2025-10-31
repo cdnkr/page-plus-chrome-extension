@@ -22,7 +22,8 @@
       "sidePanel",
       "activeTab",
       "storage",
-      "tabs"
+      "tabs",
+      "unlimitedStorage"
     ],
     "host_permissions": [
       "<all_urls>"
