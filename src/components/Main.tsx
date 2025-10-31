@@ -562,6 +562,10 @@ export default function Main() {
         contextItemsRef.current = contextItems
     }, [contextItems])
 
+    useEffect(() => {
+        scrollToBottomOfMessageContainer()
+    }, [currentConversation])
+
     async function onSubmit() {
         if (!query) return
 
