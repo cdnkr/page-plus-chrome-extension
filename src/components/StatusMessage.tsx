@@ -23,9 +23,9 @@ export default function StatusMessage({
     }
 
     return (
-        <div className='absolute bottom-full w-full p-2 mb-2'>
+        <div className='absolute bottom-full w-full p-2 mb-2 z-99'>
             <div className={cn(
-                "relative p-4 bg-white/60 dark:bg-white/60 border-l-4 backdrop-blur-lg rounded-none shadow-lg",
+                "relative p-4 bg-white/60 dark:bg-black/10 border-l-4 backdrop-blur-lg rounded-none shadow-lg",
                 type === 'error'
                     ? 'border-red-500'
                     : type === 'info'
@@ -34,8 +34,8 @@ export default function StatusMessage({
                             ? 'border-amber-500'
                             : 'border-green-500'
             )}>
-                <h3 className="text-base font-medium">{title}</h3>
-                <p className="text-sm text-black/50">{description}</p>
+                <h3 className="text-base font-medium text-black dark:text-white">{title}</h3>
+                <p className="text-sm text-black/50 dark:text-white/50">{description}</p>
                 {action && (
                     <div className="mt-3">
                         <Button
