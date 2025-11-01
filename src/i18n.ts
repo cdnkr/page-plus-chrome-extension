@@ -110,6 +110,15 @@ export const i18n = {
                 info: "This feature depends on Chrome's on-device APIs. See their status below to ensure they are enabled."
             },
         },
+        statusMessage: {
+            contextTooLarge: {
+                title: "Your context is too large",
+                description: "You'll have to remove some context items or summarize them before submitting.",
+                action: {
+                    label: "Summarize contexts",
+                },
+            },
+        }
     },
 
     es: {
@@ -226,6 +235,15 @@ export const i18n = {
                 info: "Esta función depende de las API en el dispositivo de Chrome. Consulta su estado a continuación para asegurarte de que estén habilitadas."
             },
         },
+        statusMessage: {
+            contextTooLarge: {
+                title: "Tu contexto es demasiado grande",
+                description: "Tendrás que eliminar algunos elementos de contexto o resumirlos antes de enviar.",
+                action: {
+                    label: "Resumir contextos",
+                },
+            },
+        },
     },
 
     ja: {
@@ -335,6 +353,15 @@ export const i18n = {
                 label: "プライバシー優先モード",
                 description: "有効にすると、オフラインのオンデバイスモデルのみが使用され、データがブラウザから送信されないことが保証されます。これにより、ページ関連の提案など、オンライン処理を必要とする機能は無効になります。",
                 info: "この機能は、ChromeのオンデバイスAPIに依存しています。以下でステータスを確認し、有効になっていることを確認してください。"
+            },
+            statusMessage: {
+                contextTooLarge: {
+                    title: "あなたのコンテキストは大きすぎます",
+                    description: "いくつかのコンテキスト項目を削除するか、要約する必要があります。",
+                    action: {
+                        label: "コンテキストを要約",
+                    },
+                },
             },
         },
     },

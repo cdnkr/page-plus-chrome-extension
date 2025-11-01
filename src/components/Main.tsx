@@ -19,6 +19,7 @@ import Conversation from "../components/conversation/Conversation"
 import { useLanguage } from "../contexts/LanguageContext"
 import { useSummarizerApi } from "../hooks/useSummarizerApi"
 import { useWriterApi } from "../hooks/useWriterApi"
+import { useI18n } from "../hooks/useI18n"
 
 export default function Main() {
     const [prevConversations, setPrevConversations] = useState<IConversationStorageItem[]>([]);
@@ -51,6 +52,7 @@ export default function Main() {
     const aiStreamingRef = useRef<HTMLDivElement | null>(null)
 
     const { language } = useLanguage();
+    const { t } = useI18n();
     const aiProvider = useAiProvider(selectedModel, currentConversation)
     const summarizerApi = useSummarizerApi()
     const writerApi = useWriterApi()
@@ -313,14 +315,14 @@ export default function Main() {
                     if (quotaUsage.percentage > 100) {
                         setStatus({
                             type: 'error',
-                            title: 'Your context is too large',
-                            description: 'You\'ll have to remove some context items before submitting',
+                            title: t('statusMessage.contextTooLarge.title'),
+                            description: t('statusMessage.contextTooLarge.description'),
                             action: {
-                                label: 'Summarize contexts',
+                                label: t('statusMessage.contextTooLarge.action.label'),
                                 onClick: summarizeActiveContexts
                             }
                         })
-                    } else if (status?.title === 'Your context is too large') {
+                    } else if (status?.title === t('statusMessage.contextTooLarge.title')) {
                         setStatus(null)
                     }
 
@@ -610,7 +612,7 @@ export default function Main() {
 
             scrollToBottomOfMessageContainer()
             if (aiStreamingRef.current) {
-                aiStreamingRef.current.style.display = 'block'
+                aiStreamingRef.current.style.opacity = '1'
             }
 
             // Execute the prompt with streaming using tools system
@@ -621,7 +623,7 @@ export default function Main() {
             }, currentConversation)
 
             if (aiStreamingRef.current) {
-                aiStreamingRef.current.style.display = 'none'
+                aiStreamingRef.current.style.opacity = '0'
             }
 
             // Streaming completed - add the final response to conversation
