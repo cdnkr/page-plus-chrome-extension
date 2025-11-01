@@ -262,7 +262,7 @@ export default function ApiStatus({
 
         if (wDownloadable) {
             return (
-                <div className="p-2 rounded-full hover:bg-black/5 cursor-pointer" onClick={onStartWriterDownload}>
+                <div className="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer" onClick={onStartWriterDownload}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-black">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                         <polyline points="7,10 12,15 17,10" />
@@ -277,7 +277,7 @@ export default function ApiStatus({
                 <div className="relative w-[40px] h-[40px] p-2 flex items-center justify-center">
                     <svg className="w-[40px] h-[40px] transform -rotate-90 shrink-0" viewBox="0 0 36 36">
                         <path
-                            className="text-gray-300"
+                            className="text-gray-300 dark:text-gray-700"
                             stroke="currentColor"
                             strokeWidth="3"
                             fill="none"
@@ -298,7 +298,7 @@ export default function ApiStatus({
                         />
                     </svg>
                     <div className="absolute inset-0 flex items-center justify-center">
-                        <span className="font-bold text-black text-[8px]">
+                        <span className="font-bold text-black dark:text-white text-[8px]">
                             {writerDownloadProgress?.toFixed(0)}%
                         </span>
                     </div>
@@ -320,29 +320,29 @@ export default function ApiStatus({
     return (
         <div className="p-3 space-y-4">
             <div className="flex flex-col gap-1">
-                <h3 className="text-base">{t('apiStatus.title')}</h3>
-                <p className="text-xs text-gray-600">
+                <h3 className="text-base text-black dark:text-white">{t('apiStatus.title')}</h3>
+                <p className="text-xs text-gray-600 dark:text-gray-400">
                     {t('apiStatus.description')}
                 </p>
             </div>
             <div className="flex items-center gap-3">
                 <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
-                        <h3 className=" text-sm text-gray-900">{t('apiStatus.googlePromptApi.title')}</h3>
+                        <h3 className=" text-sm text-gray-900 dark:text-gray-200">{t('apiStatus.googlePromptApi.title')}</h3>
                     </div>
-                    <p className="text-xs text-gray-600 mb-2">
+                    <p className="text-xs text-gray-600 dark:text-gray-400 mb-2">
                         {t('apiStatus.googlePromptApi.description')}
                     </p>
                     {isUnavailable && (
                         <>
-                            <p className="text-xs text-medium mb-2">
+                            <p className="text-xs text-medium dark:text-gray-400 mb-2">
                                 {t('apiStatus.googlePromptApi.unavailable.message')}
                             </p>
                             {renderAction()}
-                            <p className="text-xs text-medium mt-2">
+                            <p className="text-xs text-medium dark:text-gray-400 mt-2">
                                 {t('apiStatus.googlePromptApi.unavailable.instructions')}
                             </p>
-                            <p className="text-xs font-semibold mt-2">
+                            <p className="text-xs font-semibold dark:text-gray-400 mt-2">
                                 {t('apiStatus.googlePromptApi.unavailable.fallback')}
                             </p>
                         </>
@@ -357,14 +357,14 @@ export default function ApiStatus({
                 <div className="flex items-center gap-3">
                     <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
-                            <h3 className=" text-sm text-gray-900">{t('apiStatus.summarizerApi.title')}</h3>
+                            <h3 className=" text-sm text-gray-900 dark:text-gray-200">{t('apiStatus.summarizerApi.title')}</h3>
                         </div>
-                        <p className="text-xs text-gray-600 mb-2">
+                        <p className="text-xs text-gray-600 dark:text-gray-400 mb-2">
                             {t('apiStatus.summarizerApi.description')}
                         </p>
                         {sUnavailable && (
                             <>
-                                <p className="text-xs text-medium mb-2">
+                                <p className="text-xs text-medium dark:text-gray-400 mb-2">
                                     {t('apiStatus.summarizerApi.unavailable.message')}
                                 </p>
                                 <div className="space-y-2">
@@ -372,12 +372,12 @@ export default function ApiStatus({
                                         color="ghost"
                                         size="small"
                                         onClick={handleOpenFlags}
-                                        className="w-full text-xs bg-black/5 hover:bg-black/10 gap-2"
+                                        className="w-full text-xs bg-black/5 hover:bg-black/10 dark:bg-white/5 hover:dark:bg-white/10 gap-2"
                                     >
                                         {t('apiStatus.summarizerApi.unavailable.openFlagsButton')} <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-external-link-icon lucide-external-link"><path d="M15 3h6v6" /><path d="M10 14 21 3" /><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /></svg>
                                     </Button>
                                 </div>
-                                <p className="text-xs text-medium mt-2">
+                                <p className="text-xs text-medium dark:text-gray-400 mt-2">
                                     {t('apiStatus.summarizerApi.unavailable.separateAvailability')}
                                 </p>
                             </>
@@ -393,14 +393,14 @@ export default function ApiStatus({
                 <div className="flex items-center gap-3">
                     <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
-                            <h3 className=" text-sm text-gray-900">{t('apiStatus.writerApi.title')}</h3>
+                            <h3 className=" text-sm text-gray-900 dark:text-gray-200">{t('apiStatus.writerApi.title')}</h3>
                         </div>
-                        <p className="text-xs text-gray-600 mb-2">
+                        <p className="text-xs text-gray-600 dark:text-gray-400 mb-2">
                             {t('apiStatus.writerApi.description')}
                         </p>
                         {wUnavailable && (
                             <>
-                                <p className="text-xs text-medium mb-2">
+                                <p className="text-xs text-medium dark:text-gray-400 mb-2">
                                     {t('apiStatus.writerApi.unavailable.message')}
                                 </p>
                                 <div className="space-y-2">
@@ -408,7 +408,7 @@ export default function ApiStatus({
                                         color="ghost"
                                         size="small"
                                         onClick={handleOpenFlags}
-                                        className="w-full text-xs bg-black/5 hover:bg-black/10 gap-2"
+                                        className="w-full text-xs bg-black/5 hover:bg-black/10 dark:bg-white/5 hover:dark:bg-white/10 gap-2"
                                     >
                                         {t('apiStatus.writerApi.unavailable.openFlagsButton')} <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-external-link-icon lucide-external-link"><path d="M15 3h6v6" /><path d="M10 14 21 3" /><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /></svg>
                                     </Button>

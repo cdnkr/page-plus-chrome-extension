@@ -59,6 +59,7 @@ export default function VoiceInputButton({ setText, onError }: VoiceInputButtonP
       color='ghost'
       shape='circle'
       size='small'
+      className="text-black dark:text-white"
       onClick={onClick}
       aria-label={isRequestingMic ? 'Starting voice input...' : 'Start voice input'}
       disabled={isRequestingMic}

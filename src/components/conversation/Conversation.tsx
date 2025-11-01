@@ -13,13 +13,15 @@ export default function Conversation({
     contextItems,
     removeContextItem,
     isStreaming,
-    aiResponse
+    aiResponse,
+    aiStreamingRef
 }: {
     currentConversation: IConversationMessage[],
     contextItems: IContextItem[],
     removeContextItem: (itemId: string) => void,
     isStreaming: boolean,
-    aiResponse: string
+    aiResponse: string,
+    aiStreamingRef: React.RefObject<HTMLDivElement | null>
 }) {
     const [copied, setCopied] = useState(false)
 
@@ -56,7 +58,7 @@ export default function Conversation({
                             <div className="w-full flex justify-end">
                                 <div className="flex justify-end gap-1 ml-auto w-full max-w-[90%] flex-wrap">
                                     {getActiveContextItems(msg.contextIds).map(item => (
-                                        <div key={item.id} className='ml-auto w-full max-w-[calc(50%-0.25rem)] rounded-[20px] bg-black/10'>
+                                        <div key={item.id} className='ml-auto w-full max-w-[calc(50%-0.25rem)] rounded-[20px] bg-black/10 dark:bg-white/10'>
                                             <ContextItem
                                                 item={item}
                                                 onRemoveContextItem={removeContextItem}
@@ -67,9 +69,9 @@ export default function Conversation({
                                 </div>
                             </div>
                             <div className={cn(
-                                'w-fit ml-auto max-w-[90%] bg-black/10 rounded-[16px] rounded-br-[4px] py-2 px-4',
+                                'w-fit ml-auto max-w-[90%] bg-black/10 dark:bg-white/10 rounded-[16px] rounded-br-[4px] py-2 px-4',
                             )}>
-                                <p className='text-sm'>
+                                <p className='text-sm text-black dark:text-white'>
                                     {msg.content}
                                 </p>
                             </div>
@@ -111,7 +113,7 @@ export default function Conversation({
 
             {/* Streaming AI Response */}
             {isStreaming && aiResponse && !aiResponse.includes(CONVERSATION_COMPONENT_PREFIX) && (
-                <div className='w-full p-2'>
+                <div className='w-full p-2' ref={aiStreamingRef}>
                     <MarkdownRenderer
                         markdown={aiResponse}
                     />

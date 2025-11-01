@@ -146,10 +146,10 @@ export const InputSection = forwardRef<HTMLDivElement, InputSectionProps>(({
         <div
             ref={ref}
             className={cn(
-                'mt-auto w-full p-4 rounded-t-[25px] bg-white/60 backdrop-blur-lg',
+                'mt-auto w-full p-4 rounded-t-[25px] bg-white/60 dark:bg-white/5 backdrop-blur-lg',
                 // "relative before:content-[''] before:absolute before:inset-x-0 before:-top-[40px] before:h-[40px] before:bg-gradient-to-t before:from-background before:to-transparent"
             )}>
-            <div className='rounded-[25px] bg-black/10'>
+            <div className='rounded-[25px] bg-black/10 dark:bg-black/20'>
                 {contextItems.length > 0 && (
                     <div className={
                         cn(
@@ -177,7 +177,7 @@ export const InputSection = forwardRef<HTMLDivElement, InputSectionProps>(({
                                 onSubmit()
                             }
                         }}
-                        className='w-full h-full text-sm resize-none outline-none'
+                        className='w-full h-full text-sm resize-none outline-none dark:text-white dark:placeholder:text-white/50'
                         placeholder={t('inputSection.placeholder')}
                         rows={Math.ceil(query.length / TEXTAREA_PER_ROW) < 2 ? 2 : Math.ceil(query.length / TEXTAREA_PER_ROW)}
                     />
@@ -185,7 +185,7 @@ export const InputSection = forwardRef<HTMLDivElement, InputSectionProps>(({
                 <div className='flex p-2 justify-between items-end'>
                     <div className='flex items-center'>
                         <ContextMenu options={addContextItems}>
-                            <Button color='ghost' shape='circle' size='small'>
+                            <Button color='ghost' shape='circle' size='small' className="text-black dark:text-white">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-plus-icon lucide-plus"><path d="M5 12h14" /><path d="M12 5v14" /></svg>
                             </Button>
                         </ContextMenu>
@@ -195,7 +195,7 @@ export const InputSection = forwardRef<HTMLDivElement, InputSectionProps>(({
                         </div>
 
                         <ContextMenu options={modelSwitcherOptions}>
-                            <Button color='ghost' shape='rect' size='small'>
+                            <Button color='ghost' shape='rect' size='small' className="text-black dark:text-white">
                                 <span className="capitalize mr-0 text-xs">{selectedModel?.replace(/-/g, ' ').replace(/\b\w/g, char => char.toUpperCase())}</span>
                             </Button>
                         </ContextMenu>
@@ -204,7 +204,7 @@ export const InputSection = forwardRef<HTMLDivElement, InputSectionProps>(({
                         <div className="relative w-[36px] h-[36px] ml-1 flex items-center justify-between">
                             <svg className="w-[36px] h-[36px] transform -rotate-90" viewBox="0 0 36 36">
                                 <path
-                                    className="text-black/10"
+                                    className="text-black/10 dark:text-white/10"
                                     stroke="currentColor"
                                     strokeWidth="3"
                                     fill="none"
@@ -218,7 +218,7 @@ export const InputSection = forwardRef<HTMLDivElement, InputSectionProps>(({
                                             ? "text-orange-600"
                                             : contextPerc >= 100
                                                 ? "text-red-500"
-                                                : "text-black/50"
+                                                : "text-black/50 dark:text-white/50"
                                     )}
                                     stroke="currentColor"
                                     strokeWidth="3"
@@ -232,7 +232,7 @@ export const InputSection = forwardRef<HTMLDivElement, InputSectionProps>(({
                             </svg>
                             <div className="absolute inset-0 flex items-center justify-center">
                                 <span className={cn(
-                                    "font-bold text-black text-[9px]"
+                                    "font-bold text-black dark:text-white text-[9px]"
                                 )}>
                                     {(contextPerc)?.toFixed()}%
                                 </span>
@@ -244,7 +244,7 @@ export const InputSection = forwardRef<HTMLDivElement, InputSectionProps>(({
                             size='regular'
                             onClick={onSubmit}
                         >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-corner-down-left-icon lucide-corner-down-left"><path d="M20 4v7a4 4 0 0 1-4 4H4" /><path d="m9 10-5 5 5 5" /></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-corner-down-left-icon lucide-corner-down-left text-black dark:text-black"><path d="M20 4v7a4 4 0 0 1-4 4H4" /><path d="m9 10-5 5 5 5" /></svg>
                         </Button>
                     </div>
                 </div>

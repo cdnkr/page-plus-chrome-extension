@@ -47,7 +47,7 @@ export default function ContextMenu({
                     <div
                         onClick={e => e.stopPropagation()}
                         className={cn(
-                            "absolute min-w-[200px] bg-surface border border-gray-400  shadow-xl rounded-[20px] p-2 z-30",
+                            "absolute min-w-[200px] bg-surface border border-gray-400 dark:border-gray-700 shadow-xl rounded-[20px] p-2 z-30",
                             positions[position],
                             className || ''
                         )}
@@ -58,10 +58,10 @@ export default function ContextMenu({
                                 key={index}
                                 onClick={() => onOptionClick(option)}
                                 className={cn(
-                                    "flex items-center gap-3 text-sm rounded-[12px] text-black/70 p-2",
+                                    "flex items-center gap-3 text-sm rounded-[12px] text-black/70 dark:text-white/70 p-2",
                                     option.disabled 
                                         ? "opacity-50 cursor-not-allowed pointer-events-none" 
-                                        : "hover:bg-black/5 hover:text-black cursor-pointer"
+                                        : "hover:bg-black/5 hover:text-black dark:hover:bg-white/5 dark:hover:text-white cursor-pointer"
                                 )}
                             >
                                 {option.icon}
@@ -69,7 +69,7 @@ export default function ContextMenu({
                                 <div className="flex flex-col">
                                     <span>{option.label}</span>
                                     {option.description && (
-                                        <span className="text-xs text-black/50">{option.description}</span>
+                                        <span className="text-xs text-black/50 dark:text-white/50">{option.description}</span>
                                     )}
                                 </div>
                             </div>

@@ -4,7 +4,7 @@ export default function HorizontalLoader({ loaderText, className = '', loaderElC
   return (
     <div className={cn("w-full flex flex-col gap-1", className)}>
       {loaderText && (
-        <div className="text-sm mb-2 text-black/70 text-center">
+        <div className="text-sm mb-2 text-black/70 dark:text-white/70 text-center">
           {loaderText}
         </div>
       )}

@@ -46,7 +46,7 @@ export default function Popover({
                     <div
                         onClick={e => e.stopPropagation()}
                         className={cn(
-                            "absolute  min-w-[200px] bg-surface border border-gray-400 max-h-[85vh] overflow-y-auto rounded-[20px] shadow-xl p-2 z-30",
+                            "absolute  min-w-[200px] bg-surface border border-gray-400 dark:border-gray-700 max-h-[85vh] overflow-y-auto rounded-[20px] shadow-xl p-2 z-30",
                             positions[position],
                             className || '',
                             'backdrop-blur-xl'

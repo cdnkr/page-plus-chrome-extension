@@ -19,10 +19,10 @@ export default function ColorAnalyzerDisplay({ content }: { content: string }) {
                     <div key={color.hex} className="w-full h-16 rounded-[12px]" style={{ backgroundColor: color.hex }}>
 
                     </div>
-                    <div className="text-xs text-black/70 mt-1">
+                    <div className="text-xs text-black/70 dark:text-white/70 mt-1">
                         {color.hex}
                     </div>
-                    <div className="text-xs text-black/70">
+                    <div className="text-xs text-black/70 dark:text-white/70">
                         {color.rgb}
                     </div>
                 </div>

@@ -92,6 +92,9 @@ export const i18n = {
         options: {
             title: "Options",
             description: "Extension settings and options.",
+            darkMode: {
+                label: "Dark mode",
+            },
             summarizeByDefault: {
                 label: "Summarize by default",
                 description:
@@ -205,6 +208,9 @@ export const i18n = {
         options: {
             title: "Opciones",
             description: "Configuración de la extensión.",
+            darkMode: {
+                label: "Modo oscuro",
+            },
             summarizeByDefault: {
                 label: "Resumir por defecto",
                 description:
@@ -313,6 +319,9 @@ export const i18n = {
         options: {
             title: "オプション",
             description: "拡張機能の設定。",
+            darkMode: {
+                label: "ダークモード",
+            },
             summarizeByDefault: {
                 label: "デフォルトで要約する",
                 description:

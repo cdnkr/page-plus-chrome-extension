@@ -25,7 +25,7 @@ export default function StatusMessage({
     return (
         <div className='absolute bottom-full w-full p-2 mb-2'>
             <div className={cn(
-                "relative p-4 bg-white/60 border-l-4 backdrop-blur-lg rounded-none shadow-lg",
+                "relative p-4 bg-white/60 dark:bg-white/60 border-l-4 backdrop-blur-lg rounded-none shadow-lg",
                 type === 'error'
                     ? 'border-red-500'
                     : type === 'info'
@@ -43,7 +43,7 @@ export default function StatusMessage({
                             onClick={handleActionClick}
                             loading={isActionLoading}
                             className={cn(
-                                'text-black',
+                                'text-black dark:text-white',
                                 'rounded-[12px]',
                             )}
                         >

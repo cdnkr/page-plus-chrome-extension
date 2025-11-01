@@ -26,6 +26,7 @@
   --color-accent: #64748b;
   --color-secondary: #dcfce7;
   --color-content: #0f172a;
+  --color-content-rgb: 15, 23, 42;
   --color-background: #f8fafc;
 
   --color-primary-50: #fcffe7;
@@ -57,7 +58,7 @@
 }
 
 .dark {
-  --color-primary: #6ee7d5;
+  --color-primary: #fff700;
   /* Soft minty green for highlights */
   --color-muted: #3a3a3a;
   /* Muted neutral gray */
@@ -70,6 +71,7 @@
   --color-secondary: #1b1b1b;
   /* Deep gray for contrast areas */
   --color-content: #f5f5f5;
+  --color-content-rgb: 245, 245, 245;
   /* Off-white for readable text */
   --color-background: #121212;
   /* Neutral dark background */
@@ -146,11 +148,11 @@ body {
 .loader {
   display: block;
   --loader-height: 3px;
-  --loader-color: #000000;
+  --loader-color: var(--color-content);
   width: 50%;
   height: var(--loader-height);
   border-radius: 4px;
-  background-color: rgba(0,0,0,0.2);
+  background-color: rgba(var(--color-content-rgb), 0.2);
   position: relative;
 }
 

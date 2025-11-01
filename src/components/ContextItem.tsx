@@ -20,13 +20,13 @@ export default function ContextItem({ item, onRemoveContextItem, showRemoveButto
     return (
         <div className={cn(
             'group',
-            'w-full relative rounded-[20px] bg-black/5 border border-black/10 text-black p-2',
+            'w-full relative rounded-[20px] bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-black dark:text-white p-2',
             'h-[100px]',
             ((item.type === 'image') || (item.type === 'page')) ? 'p-0' : '',
             // "relative after:content-[''] after:absolute after:inset-x-0 after:bottom-0 after:h-[100%] after:bg-gradient-to-t after:from-black/20 after:to-transparent after:z-0 after:rounded-b-[20px]"
         )}>
             {isProcessing && (
-                <div className="absolute inset-0 bg-black/10 rounded-[20px] flex items-center justify-center z-10">
+                <div className="absolute inset-0 bg-black/10 dark:bg-white/10 rounded-[20px] flex items-center justify-center z-10">
                     <svg className="animate-spin" width="20" height="20" viewBox="0 0 24 24">
                         <circle cx="12" cy="12" r="10" stroke="black" strokeWidth="3" fill="none" opacity=".15" />
                         <path d="M12 2 a10 10 0 0 1 10 10" stroke="black" strokeWidth="3" fill="none" />
@@ -35,13 +35,13 @@ export default function ContextItem({ item, onRemoveContextItem, showRemoveButto
             )}
             {showRemoveButton && (
                 <div className="absolute top-2 right-2 z-10">
-                    <button onClick={() => onRemoveContextItem(item.id)} className='size-4 rounded-full cursor-pointer bg-content/50 text-surface flex items-center justify-center'>
+                    <button onClick={() => onRemoveContextItem(item.id)} className='size-4 rounded-full cursor-pointer bg-content/50 text-surface dark:bg-surface/50 dark:text-content flex items-center justify-center'>
                         <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-x-icon lucide-x"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
                     </button>
                 </div>
             )}
             {item.type === 'text' && (
-                <p className='text-xs text-black text-left italic'>{item.content.length > CONTEXT_CHAR_DISPLAY_LIMIT ? `${item.content.slice(0, CONTEXT_CHAR_DISPLAY_LIMIT)}...` : item.content}</p>
+                <p className='text-xs text-black dark:text-white text-left italic'>{item.content.length > CONTEXT_CHAR_DISPLAY_LIMIT ? `${item.content.slice(0, CONTEXT_CHAR_DISPLAY_LIMIT)}...` : item.content}</p>
             )}
             {item.type === 'page' && item.screenshot && (
                 <img className='w-full h-full object-cover rounded-[20px]' src={item.screenshot} />
@@ -50,7 +50,7 @@ export default function ContextItem({ item, onRemoveContextItem, showRemoveButto
                 <img className='w-full h-full object-cover rounded-[20px]' src={item.content} />
             )}
 
-            <div className="absolute bottom-1 right-1 size-8 flex items-center justify-center bg-white/80 text-black aspect-square rounded-full">
+            <div className="absolute bottom-1 right-1 size-8 flex items-center justify-center bg-white/80 dark:bg-surface/40 text-black dark:text-white aspect-square rounded-full">
                 {ICONS[item.type]}
             </div>
 

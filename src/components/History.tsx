@@ -84,8 +84,8 @@ function History({
                             key={prevConv.id}
                             className={
                                 cn(
-                                    'p-3 border-b border-gray-400 cursor-pointer hover:bg-black/5 relative',
-                                    prevConv.isActive ? 'bg-black/10 hover:bg-black/10 cursor-default' : '',
+                                    'p-3 border-b border-gray-400 dark:border-gray-700 cursor-pointer hover:bg-black/5 dark:hover:bg-white/5 relative',
+                                    prevConv.isActive ? 'bg-black/10 hover:bg-black/10 dark:bg-white/10 dark:hover:bg-white/10 cursor-default' : '',
                                     index === (sortedPrevConversations.length - 1) ? 'border-b-0' : ''
                                 )
                             }
@@ -93,14 +93,14 @@ function History({
                         >
                             <div className="flex justify-between items-start">
                                 <div className="flex-1 min-w-0">
-                                    <p className="font-normal text-sm truncate max-w-[85%]">{prevConv.title}</p>
+                                    <p className="font-normal text-sm truncate max-w-[85%] text-black dark:text-white">{prevConv.title}</p>
 
                                     <div className="flex items-center gap-2 mt-1">
-                                        <p className="text-xs text-black/60">
+                                        <p className="text-xs text-black/60 dark:text-white/60">
                                             {formatRelativeTime(new Date(prevConv.lastModified), t)}
                                         </p>
-                                        <span className="text-xs text-black/60">•</span>
-                                        <p className="text-xs text-black/60">
+                                        <span className="text-xs text-black/60 dark:text-white/60">•</span>
+                                        <p className="text-xs text-black/60 dark:text-white/60">
                                             {prevConv.conversations.length} {t('history.messages', { count: prevConv.conversations.length })}
                                         </p>
                                     </div>
@@ -125,7 +125,7 @@ function History({
                 </div>
             )}
         >
-            <Button className="text-black/60 hover:text-black" color='ghost' shape='rect' size='small'>
+            <Button className="text-black/60 dark:text-white/60 hover:text-black dark:hover:text-white" color='ghost' shape='rect' size='small'>
                 <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-history-icon lucide-history"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /><path d="M3 3v5h5" /><path d="M12 7v5l4 2" /></svg>
             </Button>
         </Popover>

@@ -50,24 +50,24 @@ export default function ImageZipDownloadDisplay({
     }, [expiresAt, remainingMs, t]);
 
     return (
-        <div className="w-fit rounded-[20px] p-3 bg-black/5 flex items-center justify-center gap-3">
+        <div className="w-fit rounded-[20px] p-3 bg-black/5 dark:bg-white/5 flex items-center justify-center gap-3">
             <div className="w-full">
-                <p className="text-sm text-black/70">
+                <p className="text-sm text-black/70 dark:text-white/70">
                     {t("tools.imageZipDownload.pageImages")}.zip
                 </p>
                 <div className="flex items-center gap-1 mt-1">
-                    <p className="text-[12px] text-black/60">
+                    <p className="text-[12px] text-black/60 dark:text-white/60">
                         {imageCount} {t("tools.imageZipDownload.images")}
                     </p>
-                    <span className="text-[12px] text-black/60">•</span>
-                    <p className="text-[12px] text-black/60">
+                    <span className="text-[12px] text-black/60 dark:text-white/60">•</span>
+                    <p className="text-[12px] text-black/60 dark:text-white/60">
                         {fileSizeKB} KB
                     </p>
-                    <span className="text-[12px] text-black/60">•</span>
+                    <span className="text-[12px] text-black/60 dark:text-white/60">•</span>
                     {isExpired ? (
-                        <span className="text-[12px] text-black/60">{t("tools.imageZipDownload.expired")}</span>
+                        <span className="text-[12px] text-black/60 dark:text-white/60">{t("tools.imageZipDownload.expired")}</span>
                     ) : (
-                        <span className="text-[12px] text-black/60">{expiresInLabel}</span>
+                        <span className="text-[12px] text-black/60 dark:text-white/60">{expiresInLabel}</span>
                     )}
                 </div>
             </div>

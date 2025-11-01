@@ -20,6 +20,8 @@ interface Props {
     onStartWriterDownload?: () => void
     privacyFirstModeEnabled: boolean
     setPrivacyFirstModeEnabled: (val: boolean) => void
+    darkMode: boolean
+    setDarkMode: (val: boolean) => void
 }
 
 export default function Menu({
@@ -34,7 +36,9 @@ export default function Menu({
     writerDownloadProgress,
     onStartWriterDownload,
     privacyFirstModeEnabled,
-    setPrivacyFirstModeEnabled
+    setPrivacyFirstModeEnabled,
+    darkMode,
+    setDarkMode
 }: Props) {
     const [autoSummarizeEnabled, setAutoSummarizeEnabled] = useState(false)
     const [showSuggestionsAboutPage, setShowSuggestionsAboutPage] = useState(true)
@@ -101,12 +105,12 @@ export default function Menu({
                     <LanguageSelector />
                     <div className="p-3 space-y-4">
                         <div className="flex flex-col gap-1">
-                            <h3 className="text-base">{t('options.title')}</h3>
+                            <h3 className="text-base text-black dark:text-white">{t('options.title')}</h3>
                         </div>
                         <div className="mt-3 rounded-[12px] flex items-start justify-between">
                             <div className="flex flex-col gap-1">
-                                <span className="text-sm">{t('options.summarizeByDefault.label')}</span>
-                                <span className="text-xs text-gray-600 max-w-[90%]">{t('options.summarizeByDefault.description').replace('{threshold}', AUTO_SUMMARIZE_THRESHOLD.toString())}</span>
+                                <span className="text-sm text-black dark:text-white">{t('options.summarizeByDefault.label')}</span>
+                                <span className="text-xs text-gray-600 dark:text-gray-400 max-w-[90%]">{t('options.summarizeByDefault.description').replace('{threshold}', AUTO_SUMMARIZE_THRESHOLD.toString())}</span>
                             </div>
                             <label className="inline-flex items-center cursor-pointer">
                                 <input
@@ -115,10 +119,10 @@ export default function Menu({
                                     checked={autoSummarizeEnabled}
                                     onChange={toggleAutoSummarize}
                                 />
-                                <div className="relative w-9 h-5 bg-black/20 rounded-full peer-focus:outline-none peer-checked:bg-black transition-colors">
+                                <div className="relative w-9 h-5 bg-black/20 dark:bg-white/20 rounded-full peer-focus:outline-none peer-checked:bg-black transition-colors">
                                     <div
                                         className={cn(
-                                            "absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform duration-200",
+                                            "absolute top-0.5 left-0.5 w-4 h-4 bg-white dark:bg-white rounded-full shadow transition-transform duration-200",
                                             autoSummarizeEnabled ? 'translate-x-[16px]' : 'translate-x-0'
                                         )}
                                     />
@@ -132,8 +136,8 @@ export default function Menu({
                             )}
                         >
                             <div className="flex flex-col gap-1">
-                                <span className="text-sm">{t('options.pageRelatedSuggestions.label')}</span>
-                                <span className="text-xs text-gray-600 max-w-[90%]">{t('options.pageRelatedSuggestions.description')}</span>
+                                <span className="text-sm text-black dark:text-white">{t('options.pageRelatedSuggestions.label')}</span>
+                                <span className="text-xs text-gray-600 dark:text-gray-400 max-w-[90%]">{t('options.pageRelatedSuggestions.description')}</span>
                             </div>
                             <label className="inline-flex items-center cursor-pointer">
                                 <input
@@ -142,10 +146,10 @@ export default function Menu({
                                     checked={showSuggestionsAboutPage}
                                     onChange={() => toggleShowSuggestionsAboutPage()}
                                 />
-                                <div className="relative w-9 h-5 bg-black/20 rounded-full peer-focus:outline-none peer-checked:bg-black transition-colors">
+                                <div className="relative w-9 h-5 bg-black/20 dark:bg-white/20 rounded-full peer-focus:outline-none peer-checked:bg-black transition-colors">
                                     <div
                                         className={cn(
-                                            "absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform duration-200",
+                                            "absolute top-0.5 left-0.5 w-4 h-4 bg-white dark:bg-white rounded-full shadow transition-transform duration-200",
                                             showSuggestionsAboutPage ? 'translate-x-[16px]' : 'translate-x-0'
                                         )}
                                     />
@@ -160,12 +164,12 @@ export default function Menu({
                         >
                             <div className="flex flex-col gap-1">
                                 <div className="flex items-center gap-2">
-                                    <span className="text-sm">{t('options.privacyFirst.label')}</span>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-shield-half-icon lucide-shield-half"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="M12 22V2"/></svg>
+                                    <span className="text-sm text-black dark:text-white">{t('options.privacyFirst.label')}</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-shield-half-icon lucide-shield-half text-black dark:text-white"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="M12 22V2"/></svg>
                                 </div>
-                                <span className="text-xs text-gray-600 max-w-[90%]">{t('options.privacyFirst.description')}</span>
+                                <span className="text-xs text-gray-600 dark:text-gray-400 max-w-[90%]">{t('options.privacyFirst.description')}</span>
                                 {!isPrivacyFirstAccessible && (
-                                    <span className="text-xs text-black max-w-[90%]">{t('options.privacyFirst.info')}</span>
+                                    <span className="text-xs text-black dark:text-white max-w-[90%]">{t('options.privacyFirst.info')}</span>
                                 )}
                             </div>
                             <label className="inline-flex items-center cursor-pointer">
@@ -175,11 +179,32 @@ export default function Menu({
                                     checked={privacyFirstModeEnabled}
                                     onChange={togglePrivacyFirstMode}
                                 />
-                                <div className="relative w-9 h-5 bg-black/20 rounded-full peer-focus:outline-none peer-checked:bg-black transition-colors">
+                                <div className="relative w-9 h-5 bg-black/20 dark:bg-white/20 rounded-full peer-focus:outline-none peer-checked:bg-black transition-colors">
                                     <div
                                         className={cn(
-                                            "absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform duration-200",
+                                            "absolute top-0.5 left-0.5 w-4 h-4 bg-white dark:bg-white rounded-full shadow transition-transform duration-200",
                                             privacyFirstModeEnabled ? 'translate-x-[16px]' : 'translate-x-0'
+                                        )}
+                                    />
+                                </div>
+                            </label>
+                        </div>
+                        <div className="mt-3 rounded-[12px] flex items-start justify-between">
+                            <div className="flex flex-col gap-1">
+                                <span className="text-sm text-black dark:text-white">{t('options.darkMode.label')}</span>
+                            </div>
+                            <label className="inline-flex items-center cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    className="sr-only peer"
+                                    checked={darkMode}
+                                    onChange={() => setDarkMode(!darkMode)}
+                                />
+                                <div className="relative w-9 h-5 bg-black/20 dark:bg-white/20 rounded-full peer-focus:outline-none peer-checked:bg-black transition-colors">
+                                    <div
+                                        className={cn(
+                                            "absolute top-0.5 left-0.5 w-4 h-4 bg-white dark:bg-white rounded-full shadow transition-transform duration-200",
+                                            darkMode ? 'translate-x-[16px]' : 'translate-x-0'
                                         )}
                                     />
                                 </div>
@@ -201,7 +226,7 @@ export default function Menu({
                 </>
             }
         >
-            <Button className="" color='ghost' shape='rect' size='small'>
+            <Button className=" text-black dark:text-white/80" color='ghost' shape='rect' size='small'>
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-text-align-end-icon lucide-text-align-end"><path d="M21 5H3" /><path d="M21 12H9" /><path d="M21 19H7" /></svg>
             </Button>
         </Popover>

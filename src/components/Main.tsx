@@ -42,10 +42,13 @@ export default function Main() {
     const [autoSummarizeEnabled, setAutoSummarizeEnabled] = useState(false)
     const [autoSummarizeThreshold, setAutoSummarizeThreshold] = useState(AUTO_SUMMARIZE_THRESHOLD)
     const [privacyFirstModeEnabled, setPrivacyFirstModeEnabled] = useState(false)
+    const [darkMode, setDarkMode] = useState(false)
+    const [hasInitColorScheme, setHasInitColorScheme] = useState(false)
 
     const inputSectionRef = useRef<HTMLDivElement | null>(null)
     const contextItemsRef = useRef<IContextItem[]>([])
     const messageContainerRef = useRef<HTMLDivElement | null>(null)
+    const aiStreamingRef = useRef<HTMLDivElement | null>(null)
 
     const { language } = useLanguage();
     const aiProvider = useAiProvider(selectedModel, currentConversation)
@@ -606,6 +609,9 @@ export default function Main() {
             let accumulatedResponse = ''
 
             scrollToBottomOfMessageContainer()
+            if (aiStreamingRef.current) {
+                aiStreamingRef.current.style.display = 'block'
+            }
 
             // Execute the prompt with streaming using tools system
             const usedTool = await executeWithTools(query, contextItemsRef.current.filter(item => item.isActive), (chunk: string) => {
@@ -613,6 +619,10 @@ export default function Main() {
                 setAiResponse(accumulatedResponse)
                 scrollToBottomOfMessageContainer()
             }, currentConversation)
+
+            if (aiStreamingRef.current) {
+                aiStreamingRef.current.style.display = 'none'
+            }
 
             // Streaming completed - add the final response to conversation
             const finalResponse = {
@@ -667,7 +677,7 @@ export default function Main() {
         if (!SHOW_SUGGESTIONS) return; // Check if feature is enabled and prevent multiple simultaneous requests
 
         const showSuggestionsAboutPage = await chrome?.storage?.local?.get(['showSuggestionsAboutPage'])
-        
+
         if (!showSuggestionsAboutPage.showSuggestionsAboutPage) {
             setPageSuggestions(GENERIC_PAGE_SUGGESTIONS[language]);
             return;
@@ -764,10 +774,34 @@ export default function Main() {
         }
     }, [writerApi])
 
-    // Summarizer availability refresh is not exposed in UI; omitted
+    // Color scheme
+    useEffect(() => {
+        if (hasInitColorScheme) return
+
+        chrome?.storage?.local?.get(['darkMode'], (result) => {
+            setDarkMode(result.darkMode)
+            setHasInitColorScheme(true)
+        })
+    }, [hasInitColorScheme])
+
+    useEffect(() => {
+        if (!hasInitColorScheme) return
+
+        chrome?.storage?.local?.get(['darkMode'], (result) => {
+            if (result.darkMode !== darkMode) {
+                chrome?.storage?.local?.set({ darkMode })
+            }
+        })
+    }, [darkMode])
+
 
     return (
-        <main className='relative bg-background h-screen w-full flex flex-col max-w-full'>
+        <main
+            className={cn(
+                'relative bg-background h-screen w-full flex flex-col max-w-full',
+                darkMode ? 'dark' : ''
+            )}
+        >
             <Header
                 onNewChatClick={onNewChatClick}
                 switchToConversation={switchToConversation}
@@ -785,6 +819,8 @@ export default function Main() {
                 onStartWriterDownload={handleStartWriterDownload}
                 privacyFirstModeEnabled={privacyFirstModeEnabled}
                 setPrivacyFirstModeEnabled={setPrivacyFirstModeEnabled}
+                darkMode={darkMode}
+                setDarkMode={setDarkMode}
             />
 
             <div
@@ -812,6 +848,7 @@ export default function Main() {
                     removeContextItem={removeContextItem}
                     isStreaming={isStreaming}
                     aiResponse={aiResponse}
+                    aiStreamingRef={aiStreamingRef}
                 />
             </div>
 

@@ -20,8 +20,8 @@ export default function Button({
 }: Props) {
     const colors = {
         primary: 'cursor-pointer bg-primary text-black',
-        black: 'cursor-pointer bg-black text-white',
-        ghost: 'cursor-pointer bg-transparent text-black hover:bg-black/10'
+        black: 'cursor-pointer bg-black text-white dark:text-white',
+        ghost: 'cursor-pointer bg-transparent text-black hover:bg-black/10 dark:text-white dark:hover:bg-white/10'
     }
 
     const sizes = {
