@@ -239,10 +239,7 @@ export const usePromptApi = (): UsePromptApiReturn => {
         }
       ];
 
-      console.log('[usePromptApi.ts] executePrompt messages:', messages);
-
       const result = await session.session.prompt(messages);
-      console.log('[usePromptApi.ts] executePrompt result:', result);
       return result;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to execute prompt';
@@ -273,11 +270,9 @@ export const usePromptApi = (): UsePromptApiReturn => {
       const stream = session.session.promptStreaming(messages);
       
       for await (const chunk of stream) {
-        console.log('[usePromptApi.ts] executePromptStreaming chunk:', chunk);
         onChunk(chunk);
       }
     } catch (err) {
-      console.error('[usePromptApi.ts] executePromptStreaming error:', err);
       const errorMessage = err instanceof Error ? err.message : 'Failed to execute streaming prompt';
       setError(errorMessage);
       throw new Error(errorMessage);
@@ -372,19 +367,11 @@ export const usePromptApi = (): UsePromptApiReturn => {
     contextItems: IContextItem[], 
     _currentConversation?: IConversationMessage[]
   ): Promise<string> => {
-    // Use a separate session for tool selection to avoid contaminating main session
-    let toolSelectionSession: any = null;
-    try {
-      toolSelectionSession = await (window as any).LanguageModel.create({
-        initialPrompts: [],
-        expectedInputs: [
-          { type: "text", languages: ["en", language] }
-        ],
-        expectedOutputs: [
-          { type: "text", languages: [language] }
-        ]
-      });
+    if (!session.session || !session.isActive) {
+      throw new Error('Session not initialized');
+    }
 
+    try {
       const contextMessages = formatContextItems(contextItems);
       const messages = [
         ...contextMessages,
@@ -394,21 +381,14 @@ export const usePromptApi = (): UsePromptApiReturn => {
         }
       ];
 
-      const result = await toolSelectionSession.prompt(messages);
+      const result = await session.session.prompt(messages);
       return result;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to execute tool selection';
       setError(errorMessage);
       throw new Error(errorMessage);
-    } finally {
-      // Clean up the temporary session
-      if (toolSelectionSession && typeof toolSelectionSession.destroy === 'function') {
-        await toolSelectionSession.destroy().catch((e: any) => {
-          console.warn('Failed to destroy tool selection session:', e);
-        });
-      }
     }
-  }, [formatContextItems, getLanguageInstruction, language]);
+  }, [session.session, session.isActive, formatContextItems, getLanguageInstruction]);
 
   const executeToolSelectionStructured = useCallback(async (
     query: string, 
@@ -419,9 +399,8 @@ export const usePromptApi = (): UsePromptApiReturn => {
       throw new Error('Session not initialized');
     }
 
-    let toolSelectionSession: any = null;
     try {
-      toolSelectionSession = await (window as any).LanguageModel.create({
+      const toolSelectionSession = await (window as any).LanguageModel.create({
         initialPrompts: [],
         expectedInputs: [
           { type: "text", languages: ["en", language] }
@@ -482,13 +461,6 @@ export const usePromptApi = (): UsePromptApiReturn => {
       const errorMessage = err instanceof Error ? err.message : 'Failed to execute structured tool selection';
       setError(errorMessage);
       throw new Error(errorMessage);
-    } finally {
-      // Clean up the temporary session
-      if (toolSelectionSession && typeof toolSelectionSession.destroy === 'function') {
-        await toolSelectionSession.destroy().catch((e: any) => {
-          console.warn('Failed to destroy tool selection structured session:', e);
-        });
-      }
     }
   }, [session.session, session.isActive, formatContextItems, getLanguageInstruction, language]);
 
