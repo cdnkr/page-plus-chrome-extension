@@ -611,9 +611,6 @@ export default function Main() {
             let accumulatedResponse = ''
 
             scrollToBottomOfMessageContainer()
-            if (aiStreamingRef.current) {
-                aiStreamingRef.current.style.opacity = '1'
-            }
 
             // Execute the prompt with streaming using tools system
             const usedTool = await executeWithTools(query, contextItemsRef.current.filter(item => item.isActive), (chunk: string) => {
@@ -621,10 +618,6 @@ export default function Main() {
                 setAiResponse(accumulatedResponse)
                 scrollToBottomOfMessageContainer()
             }, currentConversation)
-
-            if (aiStreamingRef.current) {
-                aiStreamingRef.current.style.opacity = '0'
-            }
 
             // Streaming completed - add the final response to conversation
             const finalResponse = {
@@ -636,13 +629,13 @@ export default function Main() {
                 toolUsed: usedTool
             }
 
+            setIsStreaming(false)
             setCurrentConversation(prev => [...prev, finalResponse])
 
             // Update the current conversation in storage
             await updateCurrentConversation(userMessage, finalResponse)
 
             setAiResponse('')
-            setIsStreaming(false)
             scrollToBottomOfMessageContainer()
 
         } catch (error) {
