@@ -16,6 +16,7 @@ export const useAiProvider = (
     switch (selectedModel) {
       case SUPPORTED_MODELS.GEMINI_NANO:
         return promptApi;
+      case SUPPORTED_MODELS.GEMINI_2_5_FLASH_LITE:
       case SUPPORTED_MODELS.GEMINI_2_5_PRO:
         // Create a wrapper for Gemini that includes conversation history
         return {
