@@ -214,16 +214,6 @@ export const usePromptApi = (): UsePromptApiReturn => {
     });
   }, []);
 
-  const getLanguageInstruction = useCallback((): string => {
-    const languageNames = {
-      en: 'English',
-      es: 'Spanish (Español)', 
-      ja: 'Japanese (日本語)'
-    };
-    
-    return `\n\nIMPORTANT: Please respond in ${languageNames[language]}. All your responses should be in ${languageNames[language]} language.`;
-  }, [language]);
-
   const executePrompt = useCallback(async (query: string, contextItems: IContextItem[]): Promise<string> => {
     if (!session.session || !session.isActive) {
       throw new Error('Session not initialized');
@@ -235,7 +225,7 @@ export const usePromptApi = (): UsePromptApiReturn => {
         ...contextMessages,
         {
           role: 'user',
-          content: query + getLanguageInstruction()
+          content: query
         }
       ];
 
@@ -246,7 +236,7 @@ export const usePromptApi = (): UsePromptApiReturn => {
       setError(errorMessage);
       throw new Error(errorMessage);
     }
-  }, [session.session, session.isActive, formatContextItems, getLanguageInstruction]);
+  }, [session.session, session.isActive, formatContextItems]);
 
   const executePromptStreaming = useCallback(async (
     query: string, 
@@ -263,13 +253,16 @@ export const usePromptApi = (): UsePromptApiReturn => {
         ...contextMessages,
         {
           role: 'user',
-          content: query + getLanguageInstruction()
+          content: query
         }
       ];
+
+      console.log('Prompt API: executePromptStreaming: Messages:', messages);
 
       const stream = session.session.promptStreaming(messages);
       
       for await (const chunk of stream) {
+        console.log('Prompt API: executePromptStreaming: Chunk:', chunk);
         onChunk(chunk);
       }
     } catch (err) {
@@ -277,7 +270,7 @@ export const usePromptApi = (): UsePromptApiReturn => {
       setError(errorMessage);
       throw new Error(errorMessage);
     }
-  }, [session.session, session.isActive, formatContextItems, getLanguageInstruction]);
+  }, [session.session, session.isActive, formatContextItems]);
 
   const calculateQuotaUsage = useCallback(async (
     contextItems: IContextItem[], 
@@ -306,7 +299,7 @@ export const usePromptApi = (): UsePromptApiReturn => {
         ...contextMessages,
         {
           role: 'user',
-          content: query + getLanguageInstruction()
+          content: query
         }
       ];
 
@@ -335,7 +328,7 @@ export const usePromptApi = (): UsePromptApiReturn => {
           ...contextMessages,
           {
             role: 'user',
-            content: query + getLanguageInstruction()
+            content: query
           }
         ];
 
@@ -360,7 +353,7 @@ export const usePromptApi = (): UsePromptApiReturn => {
       setError(errorMessage);
       throw new Error(errorMessage);
     }
-  }, [session.session, session.isActive, formatContextItems, getLanguageInstruction]);
+  }, [session.session, session.isActive, formatContextItems]);
 
   const executeToolSelection = useCallback(async (
     query: string, 
@@ -377,7 +370,7 @@ export const usePromptApi = (): UsePromptApiReturn => {
         ...contextMessages,
         {
           role: 'user',
-          content: query + getLanguageInstruction()
+          content: query
         }
       ];
 
@@ -388,7 +381,7 @@ export const usePromptApi = (): UsePromptApiReturn => {
       setError(errorMessage);
       throw new Error(errorMessage);
     }
-  }, [session.session, session.isActive, formatContextItems, getLanguageInstruction]);
+  }, [session.session, session.isActive, formatContextItems]);
 
   const executeToolSelectionStructured = useCallback(async (
     query: string, 
@@ -415,7 +408,7 @@ export const usePromptApi = (): UsePromptApiReturn => {
         ...contextMessages,
         {
           role: 'user',
-          content: query + getLanguageInstruction()
+          content: query
         }
       ];
 
@@ -462,7 +455,7 @@ export const usePromptApi = (): UsePromptApiReturn => {
       setError(errorMessage);
       throw new Error(errorMessage);
     }
-  }, [session.session, session.isActive, formatContextItems, getLanguageInstruction, language]);
+  }, [session.session, session.isActive, formatContextItems]);
 
   const executeFormFillingStructured = useCallback(async (
     query: string, 
@@ -544,7 +537,7 @@ Return a JSON object where:
       setError(errorMessage);
       throw new Error(errorMessage);
     }
-  }, [session.session, session.isActive, formatContextItems, getLanguageInstruction]);
+  }, [session.session, session.isActive, formatContextItems]);
 
   const destroySession = useCallback(() => {
     if (sessionRef.current) {
